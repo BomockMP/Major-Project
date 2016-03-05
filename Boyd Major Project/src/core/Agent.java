@@ -100,16 +100,29 @@ public class Agent extends Plane3D {
 //@Override
 	public void run(Environment environment) {
 		
+	
+	//flocking
+	getNeighbours(this, 50, environment); //get nearby agents
+	for(Plane3D a:(ArrayList<Plane3D>)neighbours){
+		//repel(a, 0, 10, 0.01f, "exponential");
+		//cohere(a, 30, 80, 0.01f, "exponential");
+		//align(this, a, 0, 50, 0.1f, "exponential");
+	}	
 		
 		
 	attractToVoxels(voxelGrid);
 	
+	//repelFromParticles();
+	
 	addSprings(1f);
 	
+	
+	
+	
+	
+	
 	update();
-	
-	//
-	
+
 	}
 
 
@@ -135,6 +148,7 @@ public class Agent extends Plane3D {
 
 		if (move == true) {
 		addForce(direction);
+		
 		//run trail
 		addLink(1f);
 		}
@@ -164,9 +178,11 @@ public class Agent extends Plane3D {
 	//-------------------------------------------------------------------------------------
 	
 	public void getNeighbours(Vec3D p, float rad, Environment environment) {
-		neighbours = new ArrayList();
+		neighbours = new ArrayList<Plane3D>();
 		ArrayList addList = environment.getWithinSphere(p, rad);
-		if(addList!=null)neighbours.addAll(addList);
+		if(addList!=null){
+			neighbours.addAll(addList);
+		}
 	}
 	
 	public void addPhe2D(DataMap pheMap, Vec3D pt, float val){
@@ -181,6 +197,32 @@ public class Agent extends Plane3D {
 		environment.addPlane(p);
 	}
 
+	//-------------------------------------------------------------------------------------
+
+	//Functions for attraction/repulsion from particle/springs
+
+	//-------------------------------------------------------------------------------------
+	
+	//avoid existing particle trails
+	
+	public void repelFromParticles(){
+		
+		for (Agent a:(ArrayList<Agent>)neighbours){
+
+		//access particle list - get latest particle - repel from it
+			if (!a.particleList.isEmpty()){
+			
+			VerletParticle3D repelP = a.particleList.get(a.particleList.size()-1);
+			repel(repelP, 0, 10, 0.001f, "exponential");
+			}
+			}
+	
+	}
+	
+	
+	
+	
+	
 	//-------------------------------------------------------------------------------------
 
 	//Creating, destroying and manipulating Trails
@@ -245,14 +287,7 @@ public void addLink(float rate){
 			addListsToPhysicsEngine(physics);
 			
 			}
-			
-			//run anchor ends function
-			//anchorEnds(springList,particleList);
-			
-			//this should only be done once...
-			//add to physics
-			//addListsToPhysicsEngine(physics);
-			
+
 		}
 		}
 

@@ -79,7 +79,7 @@ public class MainApp extends PApplet {
 		
 		
 		//environment
-		environment = new Environment(this, 1000f);
+		environment = new Environment(this, 2000f);
 		//canvas
 		canvas = new Canvas(this.g);
 		//physics for springs
@@ -107,7 +107,7 @@ public class MainApp extends PApplet {
 		// ADD AGENTS
 		for (int i = 0; i < agentCount; i++) {
 			Agent a = new Agent(spawnPts.get(i), false, voxels, physics);
-
+			
 			environment.pop.add(a);
 		}
 		
@@ -129,6 +129,7 @@ public class MainApp extends PApplet {
 		lights();
 		voxels.render(1, 50, 1, this);
 		environment.run();
+		environment.update(false); //this is needed for neighbours to work
 		
 
 		
@@ -154,7 +155,7 @@ public class MainApp extends PApplet {
 	public void keyPressed() {
 		if (key == 's') {
 			
-			environment.saveSpringParticles();
+			environment.saveSpringParticles(frameCount);
 		}
 		
 		

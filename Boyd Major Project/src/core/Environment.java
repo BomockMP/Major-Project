@@ -206,7 +206,9 @@ public class Environment {
 	}
 	
 	public ArrayList getWithinSphere(Vec3D p, float rad){
+		
 		return pts.getPointsWithinSphere(p,rad);
+		
 	}
 
 	//-------------------------------------------------------------------------------------
@@ -261,7 +263,7 @@ public class Environment {
 	//BOYD
 	//-------------
 	//Save Spring points function
-	public void saveSpringParticles(){
+	public void saveSpringParticles(int framecount){
 		ArrayList<String>lineList = new ArrayList<String>();
 		for (Agent a: pop) {
 			if(a.particleList.size()>4){
@@ -280,7 +282,7 @@ public class Environment {
 		for (int i =0;i<lineList.size()-1;i++) {
 			skin[i]=lineList.get(i);
 		}
-		parent.saveStrings("trails.txt", skin);
+		parent.saveStrings("trails_"+framecount+".txt", skin);
 	}
 	
 	//-------------
