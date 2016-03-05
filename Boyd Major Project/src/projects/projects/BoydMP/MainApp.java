@@ -66,17 +66,15 @@ public class MainApp extends PApplet {
 		noLights();
 	
 		
-		//load image
-		
+		//load image		
 		terrain = loadImage("hm4.png");
 		
 		//voxels
-		
 		voxels = new VoxelGrid(dimX, dimY, dimZ, scale);
-		
+		//call create terrain function
 		voxels.createTerrain(terrain);
 		
-		//spawn pt array
+		//spawn pt array for agents
 		spawnPts = new ArrayList<Vec3D>();
 		
 		
@@ -87,7 +85,7 @@ public class MainApp extends PApplet {
 		//physics for springs
 		//optimum settings - 0.1f gravity, 50 iteration, 0 damp, 1 timestep
 		physics = new VerletPhysics3D(new Vec3D(0,0,0.1f), 50, 0, 1); 
-		//physics = new VerletPhysics3D(); //default
+		
 		
 		
 		
@@ -102,7 +100,7 @@ public class MainApp extends PApplet {
 			
 			
 			agentCount = spawnPts.size();
-			//agentCount = 1;
+			//agentCount = 1; - debug
 			
 		}
 		
@@ -134,7 +132,7 @@ public class MainApp extends PApplet {
 		
 
 		
-		
+		//draw points
 		canvas.drawPts(environment.pop, 5);
 		//canvas.drawTrails(environment.pop, 1, 1f);
 		canvas.drawAgentSprings(environment.pop, 1, 1f);
@@ -153,7 +151,20 @@ public class MainApp extends PApplet {
 	// ---------------------------------------------------------------------------------
 	// Global Functions
 	// ---------------------------------------------------------------------------------
-	
+	public void keyPressed() {
+		if (key == 's') {
+			
+			environment.saveSpringParticles();
+		}
+		
+		
+		if (key == 't'){
+			
+		}
+		
+		
+		
+	}
 	
 	
 	

@@ -11,6 +11,7 @@ import processing.core.PApplet;
 import toxi.geom.AABB;
 import toxi.geom.Vec3D;
 import toxi.geom.mesh.TriangleMesh;
+import toxi.physics3d.VerletParticle3D;
 
 /*------------------------------------
 
@@ -255,6 +256,34 @@ public class Environment {
 
 	//-------------------------------------------------------------------------------------
 	
+	
+	//-------------
+	//BOYD
+	//-------------
+	//Save Spring points function
+	public void saveSpringParticles(){
+		ArrayList<String>lineList = new ArrayList<String>();
+		for (Agent a: pop) {
+			if(a.particleList.size()>4){
+				String c = "";
+				for(int i = 0; i<a.particleList.size();i++){
+					VerletParticle3D l = a.particleList.get(i);
+					c = c+l.x +"," + l.y + "," + l.z +"/";
+//					if(i == a.trail.size()-1){
+//						c = c+l.b.x +"," + l.b.y + "," + l.b.z +"/";
+//					}
+				}
+				lineList.add(c);
+			}
+		}
+		String[] skin = new String[lineList.size()];
+		for (int i =0;i<lineList.size()-1;i++) {
+			skin[i]=lineList.get(i);
+		}
+		parent.saveStrings("trails.txt", skin);
+	}
+	
+	//-------------
 	
 	void saveComponents(){
 		ArrayList<String>lineList = new ArrayList<String>();
