@@ -36,7 +36,7 @@ public class MainApp extends PApplet {
 	VoxelGrid voxels;
 	public static int dimX = 150;
 	public static int dimY = 200;
-	public static int dimZ = 20;
+	public static int dimZ = 5;
 	public static Vec3D scale = new Vec3D(1,1,1);
 	
 	PImage terrain;
@@ -67,7 +67,7 @@ public class MainApp extends PApplet {
 	
 		
 		//load image		
-		terrain = loadImage("hm3.png");
+		terrain = loadImage("hm5.png");
 		
 		//voxels
 		voxels = new VoxelGrid(dimX, dimY, dimZ, scale);
