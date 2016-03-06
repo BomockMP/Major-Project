@@ -36,7 +36,7 @@ public class MainApp extends PApplet {
 	VoxelGrid voxels;
 	public static int dimX = 150;
 	public static int dimY = 200;
-	public static int dimZ = 3;
+	public static int dimZ = 20;
 	public static Vec3D scale = new Vec3D(1,1,1);
 	
 	PImage terrain;
@@ -67,7 +67,7 @@ public class MainApp extends PApplet {
 	
 		
 		//load image		
-		terrain = loadImage("hm5.png");
+		terrain = loadImage("hm3.png");
 		
 		//voxels
 		voxels = new VoxelGrid(dimX, dimY, dimZ, scale);
@@ -91,9 +91,9 @@ public class MainApp extends PApplet {
 		
 		
 		//spawn positions
-		for (int i = 0; i < dimX/2; i++){
-			for (int k = 0; k < dimY/2; k++){
-				Vec3D v = new Vec3D(i*2, k*2, 20);
+		for (int i = 0; i < dimX/10; i++){
+			for (int k = 0; k < dimY/10; k++){
+				Vec3D v = new Vec3D(i*10, k*10, 20);
 				spawnPts.add(v);
 			}
 			
@@ -159,8 +159,8 @@ public class MainApp extends PApplet {
 		}
 		
 		
-		if (key == 't'){
-			
+		if (key == 'v'){
+			voxels.save("PheremoneVoxels_"+frameCount+"_"+voxels.w+"_"+voxels.h+"_"+voxels.d+".raw");
 		}
 		
 		
