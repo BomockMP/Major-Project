@@ -36,7 +36,7 @@ public class MainApp extends PApplet {
 	VoxelGrid voxels;
 	public static int dimX = 150;
 	public static int dimY = 200;
-	public static int dimZ = 15;
+	public static int dimZ = 3;
 	public static Vec3D scale = new Vec3D(1,1,1);
 	
 	PImage terrain;
@@ -67,7 +67,7 @@ public class MainApp extends PApplet {
 	
 		
 		//load image		
-		terrain = loadImage("hm4.png");
+		terrain = loadImage("hm5.png");
 		
 		//voxels
 		voxels = new VoxelGrid(dimX, dimY, dimZ, scale);
@@ -91,9 +91,9 @@ public class MainApp extends PApplet {
 		
 		
 		//spawn positions
-		for (int i = 0; i < dimX/3; i++){
-			for (int k = 0; k < dimY/3; k++){
-				Vec3D v = new Vec3D(i*3, k*3, 20);
+		for (int i = 0; i < dimX/2; i++){
+			for (int k = 0; k < dimY/2; k++){
+				Vec3D v = new Vec3D(i*2, k*2, 20);
 				spawnPts.add(v);
 			}
 			

@@ -39,6 +39,9 @@ public class Agent extends Plane3D {
 
 	//physics
 	public VerletPhysics3D physics;
+	
+	//voxel tools
+	public int searchRadius = 20;
 
 
 	//-------------------------------------------------------------------------------------
@@ -110,7 +113,7 @@ public class Agent extends Plane3D {
 	}	
 		
 		
-	attractToVoxels(voxelGrid);
+	attractToVoxels(voxelGrid, searchRadius);
 	
 	//repelFromParticles();
 	
@@ -134,12 +137,12 @@ public class Agent extends Plane3D {
 	
 	
 	
-	public void attractToVoxels(VoxelGrid voxelGrid){
+	public void attractToVoxels(VoxelGrid voxelGrid, int searchRadius){
 		
 		if (initialDirection == true){
 		startPos = this.copy();
 		Vec3D toVoxel = new Vec3D();
-		toVoxel = voxelGrid.findClosest(this, 18, 0);
+		toVoxel = voxelGrid.findClosest(this, searchRadius, 0);
 		direction = toVoxel;
 		initialDirection = false;
 	}
@@ -152,17 +155,39 @@ public class Agent extends Plane3D {
 		//run trail
 		addLink(1f);
 		}
-		float currentVal = voxelGrid.getValue(this);
-		if(currentVal>0){
-		move = false;
-		vel.set(0,0,0);
+		//stop agent when it hits a voxel within a small range
+		
+		for (int i = -1; i <= 1; i++){
+			for (int k = -1; k <= 1; k++){
+				
+				Vec3D searchRad = new Vec3D(this.x+i, this.y+k, this.z);
+				float currentVal = voxelGrid.getValue(searchRad);
+				
+				if(currentVal>0){
+				move = false;
+				vel.set(0,0,0);
+			}
 		}
 		
+		//old functionality
+//		float currentVal = voxelGrid.getValue(this);
+//		if(currentVal>0){
+//		move = false;
+//		vel.set(0,0,0);
+		}
+		
+		//reset reset trail if below voxel grid / reset trail.
 		if(this.z<-2f){
 		particleList.clear();
 		springList.clear();
-		set(startPos.x+5, startPos.y+5, startPos.z);
-		startPos = this.copy();
+		//reset position with an increased search radiuss
+		set(startPos.x, startPos.y, startPos.z);
+		this.searchRadius = searchRadius++;
+		
+		
+		//reset position
+		//set(startPos.x+5, startPos.y+5, startPos.z);
+		//startPos = this.copy();
 		}
 		
 		
