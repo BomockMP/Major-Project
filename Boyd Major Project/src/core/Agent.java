@@ -1,6 +1,7 @@
 package core;
 import java.awt.List;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.print.attribute.Size2DSyntax;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
@@ -342,6 +343,15 @@ public void addLink(float rate){
 			p1.lock();
 			VerletParticle3D p2 = particleList.get(particleList.size()-1);
 			p2.lock();
+			
+			//lock random for funsies//not doing a whole lot
+			int random = (particleList.size()*(int) Math.random());
+			VerletParticle3D p3 = particleList.get(random);
+			p3.lock();
+			VerletParticle3D p4 = particleList.get(random);
+			p4.lock();
+			VerletParticle3D p5 = particleList.get(random);
+			p5.lock();
 		}
 		
 		
