@@ -6,9 +6,10 @@ import voxelTools.VoxelGrid;
 import core.Agent;
 import core.Environment;
 
-public class WindAgent extends Agent {
-
+public class RainAgent extends Agent {
 	
+	
+
 	VoxelGrid voxelGrid;
 	PApplet parent;
 	public float TWO_PI = 6.28318530717958647693f;
@@ -19,7 +20,7 @@ public class WindAgent extends Agent {
 	
 	
 	//CONSTRUCTOR
-	public WindAgent(Vec3D _o, boolean _f, VoxelGrid _voxelGrid, PApplet _parent) {
+	public RainAgent(Vec3D _o, boolean _f, VoxelGrid _voxelGrid, PApplet _parent) {
 		super(_o, _f);
 		voxelGrid = _voxelGrid;
 		parent = _parent;
@@ -33,27 +34,21 @@ public class WindAgent extends Agent {
 	@Override
 	public void run(Environment environment){
 	
-		 int bounds = voxelGrid.getH()*(int)voxelGrid.s.y;
-		 int boundScale = (int) (bounds + (0.3f*bounds));
-		 
-		setStartPos();
-		
+
 		//RESET POSITION OF PARTICLE IF OUT OF BOUNDS//MIN AND MAX.
-		if(!inBounds(-boundScale, boundScale)){
+		if(!inBounds(-50, 100)){
 			reset();
 		}
 		
-		
-		
+
 		//FUNCTION FOR SETTING VOXEL VALUE TO 255 AT CURRENT POSITION//change this to just reduce val
-		voxelGrid.setValue(this, 0);
+		
 		
 		//FUNCTION FOR AVOIDING STRUCTURAL VOXELS (PAINTED) BETWEEN THE VALS AND WITHIN A SEARCH RADIUSS
-		avoidVoxels(voxelGrid, 15, 1f, 255f);
+		//avoidVoxels(voxelGrid, 15, 1f, 255f);
 		
 		
-		///WIND SIMULATION OF PARTICLE MOVEMENT USING PERLIN NOISE
-		windMovement();
+		rainBehaviour(0.1f);
 		update();
 		
 
@@ -69,22 +64,43 @@ public class WindAgent extends Agent {
 		 wind.x = (float) (0.1*parent.cos(TWO_PI*parent.noise(0.01f*this.x,0.01f*this.y,0.01f*this.z)));
 		 wind.y = (float) 0.1*parent.sin(TWO_PI*parent.noise(0.01f*this.x,0.01f*this.y,0.01f*this.z));
 		 wind.z = (float) 0.1*parent.sin(TWO_PI*parent.noise(0.01f*this.x,0.01f*this.y,0.01f*this.z));
-		 wind.scaleSelf(100);
-		addForce(wind.getInverted());
+		 wind.normalizeTo(0.05f);
+		addForce(wind);
 
 	}
 	
 	
-	public void setStartPos(){
+	
+	public void gravityForce(){
+		Vec3D gravity = new Vec3D(0,0,-0.098f);
+		addForce(gravity);
 		
-		if (startpBoolean == true){
-			startPos = this.copy();
-			startpBoolean = false;
-			
-		}
 	}
 	
 	
+	public void rainBehaviour(float erosionFactor){
+		
+		gravityForce();
+		
+	//	windMovement();
+		
+		
+
+		
+		//determine if hitting(or really close to?) a voxel, and repel from it
+		avoidVoxels(voxelGrid, 5, 1f, 255f);
+		//dissolve voxels when in grid
+		
+		
+		float voxVal = voxelGrid.getValue(this);
+		if (voxVal > 6){
+		float newVal = voxVal*erosionFactor;
+		voxelGrid.setValue(this, newVal);
+		bounceFromVoxels();
+		} else {
+			voxelGrid.setValue(this, 0);	
+		}
+	}
 	
 	
 	
@@ -112,16 +128,32 @@ public class WindAgent extends Agent {
 	}
 	
 	
+	public void bounceFromVoxels(){
+		Vec3D rand = randomVector().scaleSelf(10);
+		addForce(new Vec3D(rand.x,rand.y,10f));
+		
+		
+	}
+	
 	
 	//------------------------------------------------------
 	//FUNCTION FOR RESETTING POSITION IF OUT OF BOUNDS
 	//------------------------------------------------------
 	
 	public void reset(){
-
-		//set(new Vec3D(300f, (float) (float)Math.random()*(voxelGrid.getW()*voxelGrid.s.y), (float) Math.random()*(voxelGrid.getD()*voxelGrid.s.z)));
-		//System.out.println("Reset");
-		set(startPos.x, startPos.y, startPos.z);
+		 int bounds = voxelGrid.getH()*(int)voxelGrid.s.y;
+		 int boundScale = (int) (bounds + (0.2f*bounds));
+		 int minBoundsScale = (int)-0.5f*bounds;
+		 
+//		float spawnptX = parent.random((float)minBoundsScale, boundScale);
+//		float spawnptY = parent.random((float)minBoundsScale, boundScale);
+//		float spawnptZ = 100;
+		 
+		 float spawnptX = parent.random((float)0, 100);
+			float spawnptY = parent.random((float)0, 100);
+			float spawnptZ = 100;
+			
+		set(spawnptX, spawnptY, spawnptZ);
 		resetTrail();
 	}
 	
@@ -135,4 +167,11 @@ public class WindAgent extends Agent {
 			return true;
 		}
 	
+	
+	
+	
+	
+	
+	
+
 }

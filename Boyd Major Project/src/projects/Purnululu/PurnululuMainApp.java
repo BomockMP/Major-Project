@@ -36,8 +36,8 @@ public class PurnululuMainApp extends PApplet {
 	PeasyCam cam;
 	
 	VoxelGrid voxels;
-	public static int dimX = 50;
-	public static int dimY = 50;
+	public static int dimX = 100;
+	public static int dimY = 100;
 	public static int dimZ = 50;
 	public static Vec3D scale = new Vec3D(1,1,1);
 	GradientVoxels gradientVoxels;
@@ -48,8 +48,15 @@ public class PurnululuMainApp extends PApplet {
 	public Canvas canvas;
 	
 	//spawn grid array
-	public int windAgentCount = 400;
+	public int windAgentCount = 0;
+	public int rainAgentCount = 10;
 
+	//boundbox 
+	public int bounds = dimX*(int)scale.y;
+	public int boundScale = (int) (bounds + (0.1f*bounds));
+	public  int minBoundsScale = (int)-0.1f*bounds;
+	
+	PImage terrain;
 	
 	// --------------------------------------------------------------------------------
 	/// SETUP
@@ -65,38 +72,44 @@ public class PurnululuMainApp extends PApplet {
 		noLights();
 	
 		
-
+		//load image		
+				terrain = loadImage("land1.png");
 		
 		//voxels
 		voxels = new VoxelGrid(dimX, dimY, dimZ, scale);
 		//call create terrain function
-		gradientVoxels = new GradientVoxels(voxels);
-
+		voxels.createTerrain(terrain);
+		//gradient terrain from dark at bottom to light at top
+		gradientVoxels = new GradientVoxels(voxels, true);
+		gradientVoxels.run();
 	
 		//environment
 		environment = new Environment(this, 2000f);
 		//canvas
 		canvas = new Canvas(this.g);
 
-
-		gradientVoxels.run();
+		
+		
 
 		
 		
-		// ADD AGENTS
-		 int bounds = voxels.getH()*(int)voxels.s.y;
-		 int boundScale = (int) (bounds + (0.9f*bounds));
+		// ADD AGENTS - WIND
+
 		 
-		 
-		for (int i = 0; i < windAgentCount; i++) {
-			//float spawnptX = random((float)-boundScale, 0);
-			float spawnptY = random((float)-boundScale, boundScale);
-			float spawnptZ = random((float)-boundScale, boundScale);
-			//System.out.println(spawnpt);
-			WindAgent a = new WindAgent(new Vec3D(-bounds, spawnptY, spawnptZ), false, voxels, this);
-			
-			environment.pop.add(a);
-		}
+//		for (int i = 0; i < windAgentCount; i++) {
+//			//float spawnptX = random((float)-boundScale, 0);
+//			float spawnptY = random((float)-boundScale, (boundScale*1.2f));
+//			float spawnptZ = random((float)-boundScale, (boundScale*1.2f));
+//			//System.out.println(spawnpt);
+//			WindAgent a = new WindAgent(new Vec3D(-bounds, spawnptY, spawnptZ), false, voxels, this);
+//			
+//			environment.pop.add(a);
+//		}
+		
+		
+		
+		
+		
 		
 	}
 	
@@ -112,8 +125,24 @@ public class PurnululuMainApp extends PApplet {
 		
 		background(100);
 		lights();
-		//render every 2nd voxel
-		voxels.render(2, 1, 1, this);
+		
+		
+		//ADD AGENTS - RAIN
+		for (int i = 0; i < rainAgentCount; i++) {
+			float spawnptX = random((float)0, 100);
+			float spawnptY = random((float)0, 100);
+			float spawnptZ = 100;
+			
+			RainAgent a = new RainAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this);
+			
+			environment.pop.add(a);
+		}
+		
+		
+		
+		
+		
+		
 		environment.run();
 		environment.update(false); //this is needed for neighbours to work
 	
@@ -134,7 +163,8 @@ public class PurnululuMainApp extends PApplet {
 	public void keyPressed() {
 		if (key == 's') {
 			
-			
+			//render every 2nd voxel
+			voxels.render(2, 1, 1, this);
 		}
 		
 		
