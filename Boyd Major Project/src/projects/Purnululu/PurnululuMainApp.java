@@ -49,7 +49,7 @@ public class PurnululuMainApp extends PApplet {
 	public Canvas canvas;
 	
 	//spawn grid array
-	public int windAgentCount = 1500;
+	public int windAgentCount = 2500;
 	public int rainAgentCount = 10;
 
 	//boundbox 
@@ -99,7 +99,7 @@ public class PurnululuMainApp extends PApplet {
 			float spawnptZ = random(40,40);
 			
 			
-		if(i <= windAgentCount/*0.75*/){
+		if(i <= windAgentCount*0.6){
 			
 			
 			
@@ -107,7 +107,7 @@ public class PurnululuMainApp extends PApplet {
 			environment.pop.add(a);
 		 }else{
 			 
-		WindAgent a = new WindAgent(new Vec3D(140, spawnptY, spawnptZ), false, voxels, this, false);		
+		WindAgent a = new WindAgent(new Vec3D(145, spawnptY, 33), false, voxels, this, false);		
 		environment.pop.add(a);
 		 }
 	}

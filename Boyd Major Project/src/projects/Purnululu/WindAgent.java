@@ -47,9 +47,7 @@ public class WindAgent extends Agent {
 		//RESET POSITION OF PARTICLE IF OUT OF BOUNDS//MIN AND MAX.
 		if(!inBounds(-50, 150)){
 			
-			if (startPos.z > 6){
-				startPos.z = startPos.z-1;
-			}
+			
 			reset();
 		}
 		
@@ -57,7 +55,7 @@ public class WindAgent extends Agent {
 		
 		//FUNCTION FOR SETTING VOXEL VALUE TO 255 AT CURRENT POSITION//change this to just reduce val
 		//voxelGrid.setValue(this, 0);
-		windErosion(0.95f);
+		windErosion(0.8f);
 		//FUNCTION FOR AVOIDING STRUCTURAL VOXELS (PAINTED) BETWEEN THE VALS AND WITHIN A SEARCH RADIUSS
 		avoidVoxels(voxelGrid, 6, 1f, 255f); //radius 4
 		//bounceFromVoxels();
@@ -204,6 +202,11 @@ public void windErosion(float erosionFactor){
 //		if (startPos.z > 6){
 //			startPos.z = startPos.z-1;
 //		}
+		
+		if (startPos.z > 3){
+			startPos.z = startPos.z-1;
+		}
+		
 		set(startPos.x, startPos.y, startPos.z);
 		resetTrail();
 	}
