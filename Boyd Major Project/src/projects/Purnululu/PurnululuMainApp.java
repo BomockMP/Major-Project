@@ -6,6 +6,7 @@ package projects.Purnululu;
 /// LIBRARY IMPORTS ------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
@@ -48,7 +49,7 @@ public class PurnululuMainApp extends PApplet {
 	public Canvas canvas;
 	
 	//spawn grid array
-	public int windAgentCount = 0;
+	public int windAgentCount = 1500;
 	public int rainAgentCount = 10;
 
 	//boundbox 
@@ -57,6 +58,8 @@ public class PurnululuMainApp extends PApplet {
 	public  int minBoundsScale = (int)-0.1f*bounds;
 	
 	PImage terrain;
+	
+	public boolean releaseAgents = true;
 	
 	// --------------------------------------------------------------------------------
 	/// SETUP
@@ -73,7 +76,7 @@ public class PurnululuMainApp extends PApplet {
 	
 		
 		//load image		
-				terrain = loadImage("PHM1.png");
+				terrain = loadImage("PHM9.png");
 		
 		//voxels
 		voxels = new VoxelGrid(dimX, dimY, dimZ, scale);
@@ -89,6 +92,25 @@ public class PurnululuMainApp extends PApplet {
 		canvas = new Canvas(this.g);
 
 		
+		for (int i = 0; i < windAgentCount; i++) {
+			
+			//float spawnptX = -45;
+			float spawnptY = random(0,120);
+			float spawnptZ = random(40,40);
+			
+			
+		if(i <= windAgentCount/*0.75*/){
+			
+			
+			
+			WindAgent a = new WindAgent(new Vec3D(-45, spawnptY, 40), false, voxels, this, true);
+			environment.pop.add(a);
+		 }else{
+			 
+		WindAgent a = new WindAgent(new Vec3D(140, spawnptY, spawnptZ), false, voxels, this, false);		
+		environment.pop.add(a);
+		 }
+	}
 		
 
 		
@@ -128,17 +150,28 @@ public class PurnululuMainApp extends PApplet {
 		
 		
 		//ADD AGENTS - RAIN
-		for (int i = 0; i < rainAgentCount; i++) {
-			float spawnptX = random((float)0, 100);
-			float spawnptY = random((float)0, 100);
-			float spawnptZ = 100;
-			
-			RainAgent a = new RainAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this);
-			
-			environment.pop.add(a);
-		}
+//		for (int i = 0; i < rainAgentCount; i++) {
+//			float spawnptX = random((float)0, 100);
+//			float spawnptY = random((float)0, 100);
+//			float spawnptZ = 100;
+//			
+//			RainAgent a = new RainAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this);
+//			
+//			environment.pop.add(a);
+//		}
+//		
 		
 		
+//		for (int i = 0; i < windAgentCount; i++) {
+//		float spawnptX = -45;
+//		float spawnptY = random(0,120);
+//		float spawnptZ = random(10,15);
+//		//System.out.println(spawnpt);
+//		WindAgent a = new WindAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this);
+//		
+//		environment.pop.add(a);
+//	}
+//		
 		
 		
 		
@@ -164,19 +197,20 @@ public class PurnululuMainApp extends PApplet {
 		if (key == 's') {
 			
 			//render every 2nd voxel
-			voxels.render(2, 1, 1, this);
+			voxels.render(3, 1, 1, this);
 		}
 		
 		
 		if (key == 'v'){
-			voxels.save("PheremoneVoxels_"+frameCount+"_"+voxels.w+"_"+voxels.h+"_"+voxels.d+".raw");
+			voxels.save("ErosionVoxels_"+frameCount+"_"+voxels.w+"_"+voxels.h+"_"+voxels.d+".raw");
 		}
 		
 		
-		
+if (key == 'r') {
+	//releaseAgents = false;
 	}
 	
-	
+	}
 	
 }
 
