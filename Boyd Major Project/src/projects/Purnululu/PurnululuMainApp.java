@@ -73,7 +73,7 @@ public class PurnululuMainApp extends PApplet {
 	
 		
 		//load image		
-				terrain = loadImage("land1.png");
+				terrain = loadImage("PHM1.png");
 		
 		//voxels
 		voxels = new VoxelGrid(dimX, dimY, dimZ, scale);
