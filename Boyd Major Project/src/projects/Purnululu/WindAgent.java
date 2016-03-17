@@ -46,6 +46,10 @@ public class WindAgent extends Agent {
 		
 		//RESET POSITION OF PARTICLE IF OUT OF BOUNDS//MIN AND MAX.
 		if(!inBounds(-50, 150)){
+			
+			if (startPos.z > 6){
+				startPos.z = startPos.z-1;
+			}
 			reset();
 		}
 		
@@ -197,20 +201,25 @@ public void windErosion(float erosionFactor){
 
 		//set(new Vec3D(300f, (float) (float)Math.random()*(voxelGrid.getW()*voxelGrid.s.y), (float) Math.random()*(voxelGrid.getD()*voxelGrid.s.z)));
 		//System.out.println("Reset");
-		if (startPos.z > 6){
-			startPos.z = startPos.z-1;
-		}
+//		if (startPos.z > 6){
+//			startPos.z = startPos.z-1;
+//		}
 		set(startPos.x, startPos.y, startPos.z);
 		resetTrail();
 	}
+	
+	
+	
+	
+	
 	
 	///----------------------------------------------------------------------------------------
 	//// Check if agent is in bounds
 	///----------------------------------------------------------------------------------------		  			
 		
 		public boolean inBounds(int boundsMin, int boundsMax) {
-			if (  x< boundsMin ||  y < -30 || z< -10 )return false;
-			if (x > boundsMax || y > 130 ||  z> 70 )return false;
+			if (  x< boundsMin ||  y < 0 || z< -5 )return false;
+			if (x > boundsMax || y > 100 ||  z> 70 )return false;
 			return true;
 		}
 	

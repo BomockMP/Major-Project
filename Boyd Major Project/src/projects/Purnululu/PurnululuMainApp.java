@@ -95,7 +95,7 @@ public class PurnululuMainApp extends PApplet {
 		for (int i = 0; i < windAgentCount; i++) {
 			
 			//float spawnptX = -45;
-			float spawnptY = random(0,120);
+			float spawnptY = random(5,90);
 			float spawnptZ = random(40,40);
 			
 			
