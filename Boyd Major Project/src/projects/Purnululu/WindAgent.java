@@ -45,7 +45,7 @@ public class WindAgent extends Agent {
 		setStartPos();
 		
 		//RESET POSITION OF PARTICLE IF OUT OF BOUNDS//MIN AND MAX.
-		if(!inBounds(-50, 150)){
+		if(!inBounds(-80, 230)){
 			
 			
 			reset();
@@ -55,9 +55,9 @@ public class WindAgent extends Agent {
 		
 		//FUNCTION FOR SETTING VOXEL VALUE TO 255 AT CURRENT POSITION//change this to just reduce val
 		//voxelGrid.setValue(this, 0);
-		windErosion(0.8f);
+		windErosion(0.89f);
 		//FUNCTION FOR AVOIDING STRUCTURAL VOXELS (PAINTED) BETWEEN THE VALS AND WITHIN A SEARCH RADIUSS
-		avoidVoxels(voxelGrid, 6, 1f, 255f); //radius 4
+		avoidVoxels(voxelGrid, 6, 4f, 255f); //radius 4
 		//bounceFromVoxels();
 		
 		///WIND SIMULATION OF PARTICLE MOVEMENT USING PERLIN NOISE
@@ -222,7 +222,7 @@ public void windErosion(float erosionFactor){
 		
 		public boolean inBounds(int boundsMin, int boundsMax) {
 			if (  x< boundsMin ||  y < 0 || z< -5 )return false;
-			if (x > boundsMax || y > 100 ||  z> 70 )return false;
+			if (x > boundsMax || y > 150 ||  z> 80 )return false;
 			return true;
 		}
 	
