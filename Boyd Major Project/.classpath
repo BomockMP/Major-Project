@@ -13,5 +13,9 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/WBlut"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Kinect2"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenNI2"/>
+	<classpathentry kind="lib" path="C:/Libraries/bRigid/library/bRigid.jar"/>
+	<classpathentry kind="lib" path="C:/Libraries/bRigid/library/jbullet.jar"/>
+	<classpathentry kind="lib" path="C:/Libraries/bRigid/library/vecmath.jar"/>
+	<classpathentry kind="lib" path="C:/Libraries/OBJExport/library/OBJExport.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -261,7 +261,10 @@ public class Agent extends Plane3D {
 	
 	//add a particle over time to agents path
 public void addLink(float rate){
-	if (age%rate==0){ addParticle();  }
+	if (age%rate==0){ addParticle();  
+	
+	
+	}
 }
 	
 
@@ -273,6 +276,7 @@ public void addLink(float rate){
 		//make sure always a particle in list
 		if (particleList.size() == 0){
 		particleList.add(particle);
+		
 		}
 
 		//check theres not already a particle there
@@ -282,7 +286,7 @@ public void addLink(float rate){
 			if (a!=0){
 				particleList.add(particle);
 				
-			//	System.out.println(particle.getWeight());
+
 			}
 		}
 	}
