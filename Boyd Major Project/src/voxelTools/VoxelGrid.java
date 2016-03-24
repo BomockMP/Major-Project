@@ -458,7 +458,7 @@ public class VoxelGrid {
 		return toBest;
 	}
 	
-	//BOYD
+	//BOYD TESTING
 	
 	
 	public  Vec3D findClosest(Vec3D p, int rad, float target){
@@ -466,10 +466,7 @@ public class VoxelGrid {
 		return findClosest(pt[0],pt[1],pt[2],rad, target);
 	}
 	
-	
-	
-	
-	
+
 	public  Vec3D findClosest(int x, int y, int z, int rad, float target){
 		//Vec3D toBest = new Vec3D();
 		float smallestDistance = 100;
@@ -489,10 +486,53 @@ public class VoxelGrid {
 		return closestVoxel;
 		}
 		
+	////
+	public  Vec3D findValPosition(Vec3D p, int rad, float angle, Vec3D dir, float target){
+		//int[] pt = map(p);
+		return findValPosition((int)p.x,(int)p.y,(int)p.z,rad,angle, dir, target);
+	}
+	
+	public  Vec3D findValPosition(int x, int y, int z, int rad, float angle, Vec3D dir, float target){
+		Vec3D toBest = new Vec3D();
+		float best = 1000;
+		
+		
+		
+		
+		for(Cell c:getNeighbours(x, y, z, rad)){
+			
+			
+			
+			Vec3D toVoxel = new Vec3D(c.x,c.y,c.z);
+			//Vec3D toVoxel = new Vec3D(c.x-x,c.y-y,c.z-z);
+			//float a = toVoxel.angleBetween(dir,true);
+			//if(a<angle){
+				float val=c.get();
+				//if (val > 1){
+				if(Math.abs(target-val)<best && c.x > 0 && c.y > 0 && c.z > 0 ){
+					best = Math.abs(target-val);
+					//toBest = new Vec3D(c.x,c.y, c.z);
+					toBest = toVoxel;
+				}
+				//}
+			}
+		//}
+		return toBest;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
-
-
+//ORIGINAL
 
 	public Vec3D findValInRange(Vec3D p, int rad, float min, float max){
 		int[] pt = map(p);

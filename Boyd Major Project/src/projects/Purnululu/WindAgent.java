@@ -1,14 +1,21 @@
 package projects.Purnululu;
 
+import java.util.ArrayList;
+
 import javax.naming.ldap.StartTlsResponse;
 
 import com.jogamp.newt.event.MouseAdapter;
+import com.vividsolutions.jts.math.MathUtil;
 
+import controlP5.CheckBox;
 import processing.core.PApplet;
+import toxi.color.HistEntry;
 import toxi.geom.Vec3D;
+import toxi.math.MathUtils;
 import voxelTools.VoxelGrid;
 import core.Agent;
 import core.Environment;
+import core.Plane3D;
 
 public class WindAgent extends Agent {
 
@@ -17,11 +24,17 @@ public class WindAgent extends Agent {
 	PApplet parent;
 	public float TWO_PI = 6.28318530717958647693f;
 
-	public Boolean startpBoolean = true;
+	public boolean startpBoolean = true;
 	public boolean direction = true;
-
-
+	public float randomStartingDirection = 1;
+	public boolean bounds = true;
 	
+	public float sandBank = 0;
+	
+	
+	public float theta = 0.0f;
+	public float spiralRate = 7;
+	public boolean spiral = false;
 	
 	//CONSTRUCTOR
 	public WindAgent(Vec3D _o, boolean _f, VoxelGrid _voxelGrid, PApplet _parent, boolean _direction) {
@@ -30,6 +43,8 @@ public class WindAgent extends Agent {
 		parent = _parent;
 		direction = _direction;
 		
+		spiral = false;
+		//randomStartingDirection = parent.randomGaussian();
 
 	}
 	
@@ -38,32 +53,61 @@ public class WindAgent extends Agent {
 
 	@Override
 	public void run(Environment environment){
-	
-		 int bounds = voxelGrid.getH()*(int)voxelGrid.s.y;
-		 int boundScale = (int) (bounds + (0.3f*bounds));
-		 
+		
+		
+		//System.out.println(spiral);
+		
+		getNeighbours(this, 50, environment); //get nearby agents
+		for(Plane3D a:(ArrayList<Plane3D>)neighbours){
+			//repel(a, 0, 10, 0.01f, "exponential");
+		//	cohere(a, 30, 80, 0.5f, "exponential");
+			//align(this, a, 0, 50, 0.5f, "exponential");
+		}	
+				 
 		setStartPos();
 		
 		//RESET POSITION OF PARTICLE IF OUT OF BOUNDS//MIN AND MAX.
-		if(!inBounds(-80, 230)){
-			
-			
+		if(!inBounds(-80, 170)){
 			reset();
+		}
+
+		windErosion(0.1f);
+		windAddition(1f);
+		//FUNCTION FOR AVOIDING STRUCTURAL VOXELS (PAINTED) BETWEEN THE VALS AND WITHIN A SEARCH RADIUSS
+		avoidVoxels(voxelGrid, 1, 30f, 255f); //radius 4
+		
+		
+		///WIND SIMULATION OF PARTICLE MOVEMENT USING PERLIN NOISE
+		float randomX = parent.random(35, 150);
+		
+		if (this.x > randomX)
+		{
+		spiral = true;
 		}
 		
 		
+	if(spiral == false){
 		
-		//FUNCTION FOR SETTING VOXEL VALUE TO 255 AT CURRENT POSITION//change this to just reduce val
-		//voxelGrid.setValue(this, 0);
-		windErosion(0.89f);
-		//FUNCTION FOR AVOIDING STRUCTURAL VOXELS (PAINTED) BETWEEN THE VALS AND WITHIN A SEARCH RADIUSS
-		avoidVoxels(voxelGrid, 6, 4f, 255f); //radius 4
-		//bounceFromVoxels();
-		
-		///WIND SIMULATION OF PARTICLE MOVEMENT USING PERLIN NOISE
 		windMovement();
+	}
+	 
+		if (spiral == true){
 		
-	
+		if (age%spiralRate==0){
+			spiralMotion(1000f, 0.1f, 100f, 0.01f);
+			if(age%100==0){
+				if (spiralRate>0){
+				spiralRate--;
+				}else{
+					spiral = false;
+					this.vel.set(0,0,0);
+					windMovement();
+				}
+			}
+		}
+		}
+		
+		
 		
 		update();
 		
@@ -76,19 +120,23 @@ public class WindAgent extends Agent {
 	//------------------------------------------------------
 	@SuppressWarnings("static-access")
 	public void windMovement(){
+		
+		
+		//wind
 		 Vec3D wind = new Vec3D(0,0,0);
-		 wind.x = (float) (0.4*parent.cos(TWO_PI*parent.noise(0.3f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
-		 wind.y = (float) 0.4*parent.sin(TWO_PI*parent.noise(0.3f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
-		 wind.z = (float) 0.01*parent.cos(TWO_PI*parent.noise(0.3f*this.x,0.01f*this.y,0.01f*this.z));
-		 
+		 wind.x = (float) (0.4*randomStartingDirection*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
+		 wind.y = (float) 0.4*randomStartingDirection*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
+		 wind.z = (float) 0.0001*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z));
+
 		 if (direction == true){
-		 wind.scaleSelf(100);
+		 wind.scaleSelf(1);
 		addForce(wind.getInverted());
 		 }else{
-			 wind.scaleSelf(-100);
+			 wind.scaleSelf(-1);
 				addForce(wind.getInverted());
 		 }
 	}
+	
 	
 	
 	public void setStartPos(){
@@ -101,7 +149,29 @@ public class WindAgent extends Agent {
 	}
 	
 	
-	
+	public void spiralMotion(Float radius, Float distance, float angle, float maxForce){
+		
+		
+		
+	//	public void spiral2D(float wanderR, float wanderD, float angle) {
+		theta += angle;     // Randomly change wander theta
+
+			// Now we have to calculate the new location to steer towards on the wander circle
+			Vec3D circleloc = vel.copy();  // Start with velocity
+			circleloc.normalize();            // Normalize to get heading
+			circleloc.scaleSelf(distance);          // Multiply by distance
+			circleloc.addSelf(this.copy());               // Make it relative to boid's location
+
+			Vec3D circleOffSet = new Vec3D(radius* PApplet.cos(theta),radius* PApplet.sin(theta),0);
+			Vec3D target = circleloc.add(circleOffSet);
+			this.accel.addSelf(target);
+
+			
+			
+		}
+		
+		
+
 	
 	
 	
@@ -121,7 +191,7 @@ public class WindAgent extends Agent {
 		if (distance < searchRadius){
 			Vec3D awayFromVoxel = toVoxel.getInverted();
 			//System.out.println(awayFromVoxel);
-			awayFromVoxel.scaleSelf(10);
+			awayFromVoxel.scaleSelf(1);
 			//System.out.println(awayFromVoxel);
 			addForce(awayFromVoxel);
 		}
@@ -145,33 +215,81 @@ public void windErosion(float erosionFactor){
 		
 		float voxVal = voxelGrid.getValue(this);
 
-		if (voxVal >= 125){
-			float newVal = voxVal*(erosionFactor*1);
-			voxelGrid.setValue(this, newVal);
-			//bounceFromVoxels();
-			reset();
-			}
+
 		
-		if (voxVal < 125 && voxVal >= 60){
-			float newVal = voxVal*(erosionFactor*1);
-			voxelGrid.setValue(this, newVal);
-			//bounceFromVoxels();
-			reset();
-			}
-		
-		
-		if (voxVal < 60 && voxVal >= 10){
+		if ( voxVal >= 10){
 		float newVal = voxVal*erosionFactor;
 		voxelGrid.setValue(this, newVal);
 		reset();
-		//bounceFromVoxels();
 		
 		} if (voxVal < 10 && voxVal > 0) {
 			voxelGrid.setValue(this, 0);	
-			reset();
+			//System.out.println("eaten");
+			sandBank++;
 		}
 	}
 	
+public void windAddition(float scaleFactor){
+	//&& this.x > 0
+	if (sandBank > 0 ){
+	
+		//System.out.println(sandBank);
+		
+		Vec3D currentPos = new Vec3D (this.x, this.y, this.z);
+		
+		
+		if (currentPos.x > 25 && currentPos.y > 5 && currentPos.z > 5){
+			
+		
+		
+		//find a close empty voxel
+		Vec3D target = voxelGrid.findValPosition(currentPos, 10, 2f, this, 0f);
+		//System.out.println(target);
+		//find the voxels below it value
+		float voxelBelow = voxelGrid.getValue((int)target.x, (int)target.y, (int)target.z-1);
+		float voxelBelowSurrounds = 0;
+		//if the voxel is occupied
+		
+	//test moving target in
+		
+		if (voxelBelow > 0 && target.x > 10 && target.z > 20){
+			
+			//check surrounding of voxel below
+			for (int i = -1; i<=1; i++){
+				//check it doesnt equal 0. if not surrounds = > 0
+				
+				float surroundVal = voxelGrid.getValue((int)target.x+i, (int)target.y+i, (int)target.z-1);
+				
+				
+				if (surroundVal > 0){
+				voxelBelowSurrounds = surroundVal;
+				}
+				}
+			
+			
+			
+			if(voxelBelowSurrounds > 0){
+				
+			
+		//check the targets value
+		float TargetValue = voxelGrid.getValue(target);
+		
+		
+		
+		if (target.magnitude() !=0 && TargetValue < 1){
+		//if its not at origin and the value is 0 then
+			
+			//System.out.println(TargetValue);
+			voxelGrid.setValue(target, 255);
+			sandBank--;
+			
+		}
+		}
+		}
+		}
+	}
+	}
+
 	
 	
 //------------------------------------------------------
@@ -197,17 +315,17 @@ public void windErosion(float erosionFactor){
 	
 	public void reset(){
 
-		//set(new Vec3D(300f, (float) (float)Math.random()*(voxelGrid.getW()*voxelGrid.s.y), (float) Math.random()*(voxelGrid.getD()*voxelGrid.s.z)));
-		//System.out.println("Reset");
-//		if (startPos.z > 6){
-//			startPos.z = startPos.z-1;
-//		}
 		
-		if (startPos.z > 3){
-			startPos.z = startPos.z-1;
+	if (startPos.z > 5){
+		//System.out.println(startPos.z);
+		float r = parent.random(-1, 1);
+			startPos.z = startPos.z-r;
+			
 		}
 		
+	
 		set(startPos.x, startPos.y, startPos.z);
+		spiral = false;
 		resetTrail();
 	}
 	
@@ -221,8 +339,8 @@ public void windErosion(float erosionFactor){
 	///----------------------------------------------------------------------------------------		  			
 		
 		public boolean inBounds(int boundsMin, int boundsMax) {
-			if (  x< boundsMin ||  y < 0 || z< -5 )return false;
-			if (x > boundsMax || y > 150 ||  z> 80 )return false;
+			if (  x< boundsMin ||  y < -20 || z< 2 )return false;
+			if (x > boundsMax || y > 160 ||  z> 80 )return false;
 			return true;
 		}
 	
@@ -234,3 +352,9 @@ public void windErosion(float erosionFactor){
 //wind.z = (float) 0.01*parent.sin(TWO_PI*parent.noise(0.01f*this.x,0.01f*this.y,0.01f*this.z));
 //wind.scaleSelf(100);
 //addForce(wind.getInverted());
+
+//float voxVal = voxelGrid.getValue(this);
+//float voxelBelow = voxelGrid.getValue((int)this.x, (int)this.y, (int)this.z-1);
+//if (voxVal < 1 && voxelBelow > 0){
+//	voxelGrid.setValue(this, 255);
+//	sandBank--;
