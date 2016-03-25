@@ -49,7 +49,7 @@ public class PurnululuMainApp extends PApplet {
 	public Canvas canvas;
 	
 	//spawn grid array
-	public int windAgentCount = 1000;
+	public int windAgentCount = 1800;
 	public int rainAgentCount = 0;
 	public int anchorAgentCount = 0;
 
@@ -158,22 +158,25 @@ public class PurnululuMainApp extends PApplet {
 		gradientVoxels.collapseVoxels(voxels);
 		System.out.println("collapsed!");
 		}
-		if (frameCount%700==0){
-			//voxels.blurall();
-			
-			
-			for (int z=0; z<voxels.d; z+=1) {
-				for (int y=0; y<voxels.h; y+=1) {
-					for (int x=0; x<voxels.w; x+=1) {
-						voxels.blur2d(x, y, z);
-					}
-				}
-			}
-			
-			
-			
-			System.out.println("c blurred!");
-			}
+		
+		
+		
+//		if (frameCount%700==0){
+//			//voxels.blurall();
+//			
+//			
+//			for (int z=0; z<voxels.d; z+=1) {
+//				for (int y=0; y<voxels.h; y+=1) {
+//					for (int x=0; x<voxels.w; x+=1) {
+//						voxels.blur2d(x, y, z);
+//					}
+//				}
+//			}
+//			
+//			
+//			
+//			System.out.println("c blurred!");
+//			}
 	}
 	
 	
@@ -195,8 +198,21 @@ public class PurnululuMainApp extends PApplet {
 		}
 		
 		
-if (key == 'r') {
-	//releaseAgents = false;
+if (key == 'b') {
+	
+//	for (int z=0; z<voxels.d; z+=1) {
+//	for (int y=0; y<voxels.h; y+=1) {
+//		for (int x=0; x<voxels.w; x+=1) {
+//			voxels.blur2d(x, y, z);
+//		}
+//	}
+//}
+	
+	voxels.blurall();
+
+
+
+System.out.println("c blurred!");
 	}
 	
 	}

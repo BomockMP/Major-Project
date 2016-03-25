@@ -1,5 +1,6 @@
 package projects.Purnululu;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 import javax.naming.ldap.StartTlsResponse;
@@ -33,8 +34,9 @@ public class WindAgent extends Agent {
 	
 	
 	public float theta = 0.0f;
-	public float spiralRate = 7;
+	public float spiralRate = 4;
 	public boolean spiral = false;
+	public float randomSpiral;
 	
 	//CONSTRUCTOR
 	public WindAgent(Vec3D _o, boolean _f, VoxelGrid _voxelGrid, PApplet _parent, boolean _direction) {
@@ -44,6 +46,7 @@ public class WindAgent extends Agent {
 		direction = _direction;
 		
 		spiral = false;
+		
 		//randomStartingDirection = parent.randomGaussian();
 
 	}
@@ -55,7 +58,7 @@ public class WindAgent extends Agent {
 	public void run(Environment environment){
 		
 		
-		//System.out.println(spiral);
+		
 		
 		getNeighbours(this, 50, environment); //get nearby agents
 		for(Plane3D a:(ArrayList<Plane3D>)neighbours){
@@ -78,9 +81,13 @@ public class WindAgent extends Agent {
 		
 		
 		///WIND SIMULATION OF PARTICLE MOVEMENT USING PERLIN NOISE
-		float randomX = parent.random(35, 150);
+		//float randomX = parent.random(45, 150);
 		
-		if (this.x > randomX)
+		
+		
+		
+		
+		if (this.x > 50 && randomSpiral > 0.4f)
 		{
 		spiral = true;
 		}
@@ -143,6 +150,7 @@ public class WindAgent extends Agent {
 		
 		if (startpBoolean == true){
 			startPos = this.copy();
+			randomSpiral = parent.random(0,1);
 			startpBoolean = false;
 			
 		}
@@ -162,12 +170,9 @@ public class WindAgent extends Agent {
 			circleloc.scaleSelf(distance);          // Multiply by distance
 			circleloc.addSelf(this.copy());               // Make it relative to boid's location
 
-			Vec3D circleOffSet = new Vec3D(radius* PApplet.cos(theta),radius* PApplet.sin(theta),0);
+			Vec3D circleOffSet = new Vec3D(radius* PApplet.cos(theta),radius* PApplet.sin(theta),-35f);
 			Vec3D target = circleloc.add(circleOffSet);
 			this.accel.addSelf(target);
-
-			
-			
 		}
 		
 		
@@ -220,7 +225,9 @@ public void windErosion(float erosionFactor){
 		if ( voxVal >= 10){
 		float newVal = voxVal*erosionFactor;
 		voxelGrid.setValue(this, newVal);
+		if (spiral == false){
 		reset();
+		}
 		
 		} if (voxVal < 10 && voxVal > 0) {
 			voxelGrid.setValue(this, 0);	
@@ -339,7 +346,7 @@ public void windAddition(float scaleFactor){
 	///----------------------------------------------------------------------------------------		  			
 		
 		public boolean inBounds(int boundsMin, int boundsMax) {
-			if (  x< boundsMin ||  y < -20 || z< 2 )return false;
+			if (  x< boundsMin ||  y < -20 || z< 0 )return false;
 			if (x > boundsMax || y > 160 ||  z> 80 )return false;
 			return true;
 		}
