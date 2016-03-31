@@ -37,8 +37,15 @@ public class ParticleAgent extends VerletParticle3D {
 		addSpringsToCloseParticles(springManager.springPhysics, 3, false);
 		
 		avoidVoxels(voxelGrid, 30, 1f, 255f, 100f);
+		//rise();
+		
+		
+		if ( age > 100 ){
+		locking();
+		}
 		
 		age++;
+		
 	}
 	
 	
@@ -55,7 +62,7 @@ public class ParticleAgent extends VerletParticle3D {
 			for (int i = 0; i <= connectionCount; i++){
 				VerletParticle3D a = (VerletParticle3D)neighbours.get(i);
 				if (springPhysics.getSpring(a, this) == null){
-				VerletSpring3D s = new VerletSpring3D(this, a, 50, 0.001f);
+				VerletSpring3D s = new VerletSpring3D(this, a, 40, 0.005f); //VerletSpring3D s = new VerletSpring3D(this, a, 50, 0.001f);
 				springPhysics.addSpring(s);
 				}
 			}
@@ -74,7 +81,17 @@ public class ParticleAgent extends VerletParticle3D {
 	
 	
 	
-	
+	public void rise(){
+		if (this.z < 0){
+		//this.scaleSelf(1, 1, -1f);
+			this.scaleSelf(1, 1, -0.1f);
+		}
+		if (this.z > 30){
+			this.scaleSelf(1,1,-1f);
+		}
+		
+			
+	}
 	
 	
 	
@@ -103,8 +120,7 @@ public class ParticleAgent extends VerletParticle3D {
 		
 		if (age%update==0){
 			
-			//lock if on white voxel
-			//locking();
+			
 			
 			
 		//get position of agent in voxel grid
@@ -112,7 +128,7 @@ public class ParticleAgent extends VerletParticle3D {
 		//get the vector to structural voxels with a val  between those defined within the search radius. Note: not the position of the voxel.
 		Vec3D toVoxel = voxelGrid.findValInRange(v[0], v[1], v[2], searchRadius, minVal, maxVal);
 		//System.out.println(toVoxel);
-		toVoxel.scaleSelf(1, 1, 0.0f);
+		toVoxel.scaleSelf(1, 1, 1f);
 		
 		
 		
@@ -122,7 +138,7 @@ public class ParticleAgent extends VerletParticle3D {
 			
 			Vec3D awayFromVoxel = toVoxel; //repel Vec3D awayFromVoxel = toVoxel.getInverted();
 			//System.out.println(awayFromVoxel);
-			awayFromVoxel.scaleSelf(0.01f);
+			awayFromVoxel.scaleSelf(0.05f); //force factor
 			//System.out.println(awayFromVoxel);
 			addForce(awayFromVoxel);
 		}
@@ -130,14 +146,37 @@ public class ParticleAgent extends VerletParticle3D {
 		}
 	}
 	
+	
+	
+	
+	
 	//lock
 	
 	public void locking(){
-		
 		float voxVal = voxelGrid.getValue(this);
+		float checked = 0;
+		float checkDist = 1;
 		
-		if (voxVal > 0){
-			this.lock();
+		
+		if (neighbours.size() > 0){
+		
+		float maxSize = neighbours.size();
+		
+		
+		for (int i = 0; i < neighbours.size(); i++){
+			VerletParticle3D p = (VerletParticle3D) neighbours.get(i);
+			
+			if (distanceTo(p)>checkDist){
+			checked++;	
+			}
+		}
+		
+		if (voxVal > 0 && checked >= maxSize){
+		
+		this.lock();
+		System.out.println("lock:");
+	}
+		
 		}
 	}
 	

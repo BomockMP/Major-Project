@@ -17,6 +17,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import projects.Purnululu.AnchorAgent;
 import toxi.geom.Vec3D;
+import toxi.physics3d.VerletParticle3D;
 import toxi.physics3d.VerletPhysics3D;
 import voxelTools.VoxelGrid;
 
@@ -24,7 +25,7 @@ public class MainApp extends PApplet {
 
 	PeasyCam cam;
 	public Canvas canvas;
-	public int particleCount = 30;
+	public int particleCount = 60;
 	public VerletPhysics3D springPhysics;
 	public SpringManager springManager;
 	
@@ -58,7 +59,7 @@ public class MainApp extends PApplet {
 		//voxels.initGrid();
 		
 		//trail spring p hysics
-		springPhysics = new VerletPhysics3D(new Vec3D(0,0,-0.000f), 50, 0, 1); 
+		springPhysics = new VerletPhysics3D(new Vec3D(0,0,0.004f), 100, 0, 1); 
 		
 		springManager = new SpringManager(springPhysics, 10000, this);
 		
@@ -124,7 +125,19 @@ public class MainApp extends PApplet {
 			voxels.save("PheremoneVoxels_"+frameCount+"_"+voxels.w+"_"+voxels.h+"_"+voxels.d+".raw");
 		}
 		
-		
+		if (key == 'l'){
+			for (int i = 0; i < springPhysics.particles.size(); i++){
+			VerletParticle3D p =  springPhysics.particles.get(i);
+			p.lock();
+			}
+		}
+			
+			if (key == 'u'){
+				for (int i = 0; i < springPhysics.particles.size(); i++){
+				VerletParticle3D p =  springPhysics.particles.get(i);
+				p.unlock();
+				}
+		}
 		
 	}
 }
