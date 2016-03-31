@@ -1,13 +1,17 @@
 package projects.distribution;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import core.Agent;
 import core.Plane3D;
 import pointCloudTools.Plane3DOctree;
+import processing.core.PApplet;
 import toxi.geom.Vec3D;
+import toxi.physics3d.VerletMinDistanceSpring3D;
 import toxi.physics3d.VerletParticle3D;
 import toxi.physics3d.VerletPhysics3D;
+import toxi.physics3d.VerletSpring3D;
 
 public class SpringManager {
 
@@ -18,15 +22,17 @@ public class SpringManager {
 	
 	public Plane3DOctree pts;
 	public float bounds;
+	public PApplet parent;
 	
 	public ArrayList<ParticleAgent> pop;
 	public ArrayList<ParticleAgent> removeAgents;
 	public ArrayList<ParticleAgent> addAgents;
 	
 	//CONSTRUCTOR
-	public SpringManager(VerletPhysics3D _springPhysics, float _bounds){
+	public SpringManager(VerletPhysics3D _springPhysics, float _bounds, PApplet _parent){
 		springPhysics = _springPhysics;
 		bounds = _bounds;
+		parent = _parent;
 		pts = new Plane3DOctree(new Vec3D(-bounds,-bounds,-bounds), bounds*2);
 		pop = new ArrayList<ParticleAgent>();
 		removeAgents = new ArrayList<ParticleAgent>();
@@ -40,6 +46,8 @@ public class SpringManager {
 	public void run(){
 
 		for (ParticleAgent a: pop)a.run(this);
+		
+		//addMinDistanceSprings(springPhysics);
 	}
 	
 	
@@ -63,24 +71,7 @@ public class SpringManager {
 	
 	
 	
-	//add springs if particles are within certain distance to each other
-	//lets do this in particleAgent
-//	public void addSpringsWithinRange(){
-//		
-//		
-//		if (springPhysics.particles.size()>0){
-//			
-//			for (int i = 0; i < springPhysics.particles.size(); i++){
-//			VerletParticle3D a = springPhysics.particles.get(i);
-//			
-//			//check distance between particles
-//			Vec3D thisPos = a.abs();
-//			
-//			
-//			
-//		}
-//}
-//	}
+
 	
 	
 	//Getting neighbours
@@ -92,7 +83,37 @@ public ArrayList getWithinSphere(Vec3D p, float rad){
 		
 	}
 	
+
+public void addMinDistanceSprings(VerletPhysics3D springPhysics){
+
+
+	for (int k = 0; k < springPhysics.particles.size(); k++){
 	
+		VerletParticle3D pp = springPhysics.particles.get(k);
+		
+		
+		
+	Iterator i=springPhysics.particles.iterator();
+	
+	//VerletParticle3D p = (VerletParticle3D)i.next();
+	
+	
+	
+	while( i.hasNext()){
+	
+		//System.out.println("test");
+		
+	VerletParticle3D p1 = (VerletParticle3D)i.next();
+	
+	VerletMinDistanceSpring3D s = new VerletMinDistanceSpring3D(p1, pp, 400, 100f);
+	
+	springPhysics.addSpring(s);
+	//p = p1;
+	}
+	}
+
+	}
+
 	
 	
 //-------------------------------------------------------------------------------------
@@ -120,10 +141,31 @@ public void removeAll(){
 }
 	
 	
-	
-	
-	
-	
+//-------------------------------------------------------------------------------------
+
+//Save spring linework
+
+//-------------------------------------------------------------------------------------
+public void saveSpringParticles(int framecount){
+	ArrayList<String>lineList = new ArrayList<String>();
+	for (VerletSpring3D a: springPhysics.springs) {
+		if(springPhysics.springs.size()>0){
+			String c = "";
+			for(int i = 0; i<springPhysics.springs.size();i++){
+				VerletSpring3D l = springPhysics.springs.get(i);
+				
+				c = c+l.a.x  +"," + l.a.y  + "," + l.a.z  +"/";
+				//c = c+l.b.x  +"," + l.b.y  + "," + l.b.z  +"/";
+			}
+			lineList.add(c);
+		}
+	}
+	String[] skin = new String[lineList.size()];
+	for (int i =0;i<lineList.size()-1;i++) {
+		skin[i]=lineList.get(i);
+	}
+	parent.saveStrings("trails_"+framecount+".txt", skin);
+}
 	
 	
 	
