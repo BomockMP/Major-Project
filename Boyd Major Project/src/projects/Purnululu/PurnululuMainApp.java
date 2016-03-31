@@ -37,9 +37,9 @@ public class PurnululuMainApp extends PApplet {
 	PeasyCam cam;
 	
 	VoxelGrid voxels;
-	public static int dimX = 150;
-	public static int dimY = 150;
-	public static int dimZ = 40; //75
+	public static int dimX = 140;
+	public static int dimY = 250;
+	public static int dimZ = 30; //75
 	public static Vec3D scale = new Vec3D(1,1,1);
 	GradientVoxels gradientVoxels;
 
@@ -49,7 +49,7 @@ public class PurnululuMainApp extends PApplet {
 	public Canvas canvas;
 	
 	//spawn grid array
-	public int windAgentCount = 1800;
+	public int windAgentCount = 1500;
 	public int rainAgentCount = 0;
 	public int anchorAgentCount = 0;
 
@@ -111,8 +111,8 @@ public class PurnululuMainApp extends PApplet {
 		for (int i = 0; i < windAgentCount; i++) {
 			
 			
-			float spawnptY = random(5,140);
-			float spawnptZ = random(16,21);
+			float spawnptY = random(5,240);
+			float spawnptZ = random(16,20);
 			
 		if(i <= windAgentCount){
 			
@@ -161,22 +161,22 @@ public class PurnululuMainApp extends PApplet {
 		
 		
 		
-//		if (frameCount%700==0){
-//			//voxels.blurall();
-//			
-//			
-//			for (int z=0; z<voxels.d; z+=1) {
-//				for (int y=0; y<voxels.h; y+=1) {
-//					for (int x=0; x<voxels.w; x+=1) {
-//						voxels.blur2d(x, y, z);
-//					}
-//				}
-//			}
-//			
-//			
-//			
-//			System.out.println("c blurred!");
-//			}
+		if (frameCount%700==0){
+			//voxels.blurall();
+			
+			
+			for (int z=0; z<voxels.d; z+=1) {
+				for (int y=0; y<voxels.h; y+=1) {
+					for (int x=0; x<voxels.w; x+=1) {
+						voxels.blur2d(x, y, z);
+					}
+				}
+			}
+			
+			
+			
+			System.out.println("c blurred!");
+			}
 	}
 	
 	

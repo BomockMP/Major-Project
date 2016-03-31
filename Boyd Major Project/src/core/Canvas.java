@@ -15,6 +15,7 @@ import toxi.geom.Vec3D;
 import toxi.geom.mesh.Face;
 import toxi.geom.mesh.Mesh3D;
 import toxi.physics3d.VerletConstrainedSpring3D;
+import toxi.physics3d.VerletParticle3D;
 import toxi.physics3d.VerletSpring3D;
 
 
@@ -39,6 +40,16 @@ public class Canvas{
 			graphics.point(p.x,p.y,p.z);
 		}
 	}
+	
+	//Boyd
+	public void drawParticles(List pts, float rad){
+		graphics.strokeWeight(rad);
+		graphics.stroke(255);
+		for(VerletParticle3D p:(List<VerletParticle3D>) pts){
+			graphics.point(p.x,p.y,p.z);
+		}
+	}
+	
 	
 	public void drawPlane(Plane3D p, float s, float w){
 		graphics.strokeWeight(w);
@@ -96,6 +107,20 @@ public class Canvas{
 	
 	
 	public void drawSprings(ArrayList<VerletSpring3D>springs, float size, float greyscale ){
+		graphics.strokeWeight(size);
+		graphics.stroke(greyscale);
+		for(VerletSpring3D s:springs){
+			graphics.strokeWeight(size);
+			graphics.line(s.a.x, s.a.y, s.a.z, s.b.x, s.b.y, s.b.z); 
+			graphics.strokeWeight(size*2);
+			graphics.stroke(255);
+			//if(s.a.locked())graphics.stroke(255,0,0);
+			graphics.point(s.a.x, s.a.y,s.a.z);
+
+		}
+	}
+	
+	public void drawSpringPhysics(List<VerletSpring3D>springs, float size, float greyscale ){
 		graphics.strokeWeight(size);
 		graphics.stroke(greyscale);
 		for(VerletSpring3D s:springs){

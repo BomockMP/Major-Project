@@ -34,10 +34,11 @@ public class WindAgent extends Agent {
 	
 	
 	public float theta = 0.0f;
-	public float spiralRate = 4;
+	public float spiralRate = 3;
 	public boolean spiral = false;
 	public float randomSpiral;
-	
+	public float XdepositPosition;
+	float randomX;
 	//CONSTRUCTOR
 	public WindAgent(Vec3D _o, boolean _f, VoxelGrid _voxelGrid, PApplet _parent, boolean _direction) {
 		super(_o, _f);
@@ -70,24 +71,24 @@ public class WindAgent extends Agent {
 		setStartPos();
 		
 		//RESET POSITION OF PARTICLE IF OUT OF BOUNDS//MIN AND MAX.
-		if(!inBounds(-80, 170)){
+		if(!inBounds(-80, 150)){
 			reset();
 		}
 
-		windErosion(0.1f);
+		windErosion(0.08f);
 		windAddition(1f);
 		//FUNCTION FOR AVOIDING STRUCTURAL VOXELS (PAINTED) BETWEEN THE VALS AND WITHIN A SEARCH RADIUSS
-		avoidVoxels(voxelGrid, 1, 30f, 255f); //radius 4
+		avoidVoxels(voxelGrid, 2, 30f, 255f); //radius 4
 		
 		
 		///WIND SIMULATION OF PARTICLE MOVEMENT USING PERLIN NOISE
-		//float randomX = parent.random(45, 150);
 		
 		
 		
 		
 		
-		if (this.x > 50 && randomSpiral > 0.4f)
+		
+		if (this.x > randomX && randomSpiral > 0.25f)
 		{
 		spiral = true;
 		}
@@ -151,6 +152,8 @@ public class WindAgent extends Agent {
 		if (startpBoolean == true){
 			startPos = this.copy();
 			randomSpiral = parent.random(0,1);
+			XdepositPosition = parent.random(2,8);
+			randomX = parent.random(70, 110);
 			startpBoolean = false;
 			
 		}
@@ -170,7 +173,7 @@ public class WindAgent extends Agent {
 			circleloc.scaleSelf(distance);          // Multiply by distance
 			circleloc.addSelf(this.copy());               // Make it relative to boid's location
 
-			Vec3D circleOffSet = new Vec3D(radius* PApplet.cos(theta),radius* PApplet.sin(theta),-35f);
+			Vec3D circleOffSet = new Vec3D(radius* PApplet.cos(theta),radius* PApplet.sin(theta),-10f);
 			Vec3D target = circleloc.add(circleOffSet);
 			this.accel.addSelf(target);
 		}
@@ -225,9 +228,9 @@ public void windErosion(float erosionFactor){
 		if ( voxVal >= 10){
 		float newVal = voxVal*erosionFactor;
 		voxelGrid.setValue(this, newVal);
-		if (spiral == false){
+		//if (spiral == false){
 		reset();
-		}
+		//}
 		
 		} if (voxVal < 10 && voxVal > 0) {
 			voxelGrid.setValue(this, 0);	
@@ -245,7 +248,7 @@ public void windAddition(float scaleFactor){
 		Vec3D currentPos = new Vec3D (this.x, this.y, this.z);
 		
 		
-		if (currentPos.x > 25 && currentPos.y > 5 && currentPos.z > 5){
+		if (currentPos.x > XdepositPosition && currentPos.x < 145 && currentPos.y > 5 && currentPos.y < 245 && currentPos.z > 5){
 			
 		
 		
@@ -322,17 +325,21 @@ public void windAddition(float scaleFactor){
 	
 	public void reset(){
 
+		spiralRate = 0;
+		theta = 0.0f;
+		spiral = false;
 		
 	if (startPos.z > 5){
 		//System.out.println(startPos.z);
 		float r = parent.random(-1, 1);
 			startPos.z = startPos.z-r;
 			
+			
 		}
 		
 	
 		set(startPos.x, startPos.y, startPos.z);
-		spiral = false;
+		//spiral = false;
 		resetTrail();
 	}
 	
@@ -347,7 +354,7 @@ public void windAddition(float scaleFactor){
 		
 		public boolean inBounds(int boundsMin, int boundsMax) {
 			if (  x< boundsMin ||  y < -20 || z< 0 )return false;
-			if (x > boundsMax || y > 160 ||  z> 80 )return false;
+			if (x > boundsMax || y > 255 ||  z> 80 )return false;
 			return true;
 		}
 	
