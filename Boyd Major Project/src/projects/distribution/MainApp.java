@@ -29,13 +29,13 @@ public class MainApp extends PApplet {
 
 	PeasyCam cam;
 	public Canvas canvas;
-	public int particleCount = 60;
+	public int particleCount = 190;
 	public VerletPhysics3D springPhysics;
 	public SpringManager springManager;
 	
 	VoxelGrid voxels;
-	public static int dimX = 200;
-	public static int dimY = 200;
+	public static int dimX = 300;
+	public static int dimY = 300;
 	public static int dimZ = 1;
 	public static Vec3D scale = new Vec3D(1,1,1);
 	PImage terrain;
@@ -66,7 +66,7 @@ public class MainApp extends PApplet {
 		springPhysics = new VerletPhysics3D(new Vec3D(0,0,0.0f), 100, 0, 1); 
 		
 		//bounds from centre point to extents. 0 in Z direction.
-		springPhysics.setWorldBounds(new AABB(new Vec3D(dimX/2, dimY/2, 0), new Vec3D(100,100,0)));
+		springPhysics.setWorldBounds(new AABB(new Vec3D(dimX/2, dimY/2, 0), new Vec3D(dimX/2,dimY/2,0)));
 		
 		springManager = new SpringManager(springPhysics, 10000, this);
 		
@@ -82,8 +82,8 @@ public class MainApp extends PApplet {
 			ParticleAgent a  = new ParticleAgent(spawnptX, spawnptY, 0, voxels);
 			springPhysics.addParticle(a);
 			springManager.addAgent(a);
-			
-			springPhysics.addBehavior(new AttractionBehavior3D(a, 30, -1.2f, 1.2f));
+			//AttractionBehavior(toxi.geom.Vec3D attractor, float radius, float strength, float jitter) 
+			springPhysics.addBehavior(new AttractionBehavior3D(a, 100, -5f, 0.000f));
 		
 		}
 		
@@ -97,7 +97,7 @@ public class MainApp extends PApplet {
 	public void draw() {
 		
 		
-	System.out.println(springPhysics.springs.size());	
+	//System.out.println(springPhysics.springs.size());	
 		
 	background(100);
 	lights();

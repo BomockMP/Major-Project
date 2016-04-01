@@ -1,5 +1,6 @@
 package projects.distribution;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -22,6 +23,7 @@ public class ParticleAgent extends VerletParticle3D {
 	public boolean removeParticle = true;
 	public boolean springIt = true;
 	
+	public float springCount = 0;
 	
 	public ParticleAgent(float x, float y, float z, VoxelGrid _voxelGrid) {
 		super(x, y, z);
@@ -34,11 +36,11 @@ public class ParticleAgent extends VerletParticle3D {
 	public void run(SpringManager springManager){
 		
 	
-		float searchRadius = 60f; //60*(float)random;
+		float searchRadius = 30f; //60*(float)random;
 		getNeighbours(this, searchRadius, springManager);
-		addSpringsToCloseParticles(springManager.springPhysics, 3, true);
+		addSpringsToCloseParticles(springManager.springPhysics, 3, false);
 		//addSprings(springManager.springPhysics);
-		avoidVoxels(voxelGrid, 10, 0f, 1f, 100f);
+		avoidVoxels(voxelGrid, 10, 0f, 1f, 100f, 0.1f);
 		//removeIfOverEmptyVoxels(springManager);
 		
 		age++;
@@ -54,15 +56,20 @@ public class ParticleAgent extends VerletParticle3D {
 	
 	public void addSpringsToCloseParticles(VerletPhysics3D springPhysics, int connectionCount, boolean connectAll){
 
+		
 
-			if(connectionCount < neighbours.size() && connectAll == false){
-			for (int i = 0; i <= connectionCount; i++){
-				VerletParticle3D a = (VerletParticle3D)neighbours.get(i);
-				if (springPhysics.getSpring(a, this) == null){
-				VerletSpring3D s = new VerletSpring3D(this, a, 40, 0.005f); //VerletSpring3D s = new VerletSpring3D(this, a, 50, 0.001f);
-				springPhysics.addSpring(s);
+			if(connectAll == false){
+				//System.out.println(springCount);
+				for (VerletParticle3D a:(ArrayList<VerletParticle3D>)neighbours){
+					if (springPhysics.getSpring(a, this) == null && springCount < connectionCount){
+						VerletSpring3D s = new VerletSpring3D(this, a, 15, 0.2f);
+						//VerletMinDistanceSpring3D s = new VerletMinDistanceSpring3D(this, a, 20, 0.0001f);
+						springPhysics.addSpring(s);
+						springCount++;
+					}
 				}
-			}
+				
+
 			
 			}else{
 				
@@ -139,7 +146,7 @@ public class ParticleAgent extends VerletParticle3D {
 	//TODO ADD lock function if it hits desirable voxel
 	//actually attracting
 	
-	public void avoidVoxels(VoxelGrid voxelGrid, int searchRadius, float minVal, float maxVal, float update){
+	public void avoidVoxels(VoxelGrid voxelGrid, int searchRadius, float minVal, float maxVal, float update, float forceScale){
 		
 		if (age%update==0){
 			
@@ -157,7 +164,7 @@ public class ParticleAgent extends VerletParticle3D {
 		//	Vec3D awayFromVoxel = toVoxel; 
 		Vec3D awayFromVoxel = toVoxel.getInverted();
 			//System.out.println(awayFromVoxel);
-		awayFromVoxel.scaleSelf(0.05f); //force factor
+		awayFromVoxel.scaleSelf(forceScale); //force factor
 			//System.out.println(awayFromVoxel);
 		addForce(awayFromVoxel);
 		}
