@@ -1,6 +1,7 @@
 package projects.distribution;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import core.Agent;
 import core.Environment;
@@ -18,7 +19,8 @@ public class ParticleAgent extends VerletParticle3D {
 	public double random;
 	public VoxelGrid voxelGrid;
 	public float age = 0;
-	
+	public boolean removeParticle = true;
+	public boolean springIt = true;
 	
 	
 	public ParticleAgent(float x, float y, float z, VoxelGrid _voxelGrid) {
@@ -32,17 +34,12 @@ public class ParticleAgent extends VerletParticle3D {
 	public void run(SpringManager springManager){
 		
 	
-		float searchRadius = 60*(float)random;
+		float searchRadius = 60f; //60*(float)random;
 		getNeighbours(this, searchRadius, springManager);
-		addSpringsToCloseParticles(springManager.springPhysics, 3, false);
-		
-		avoidVoxels(voxelGrid, 30, 1f, 255f, 100f);
-		//rise();
-		
-		
-		if ( age > 100 ){
-		locking();
-		}
+		addSpringsToCloseParticles(springManager.springPhysics, 3, true);
+		//addSprings(springManager.springPhysics);
+		avoidVoxels(voxelGrid, 10, 0f, 1f, 100f);
+		//removeIfOverEmptyVoxels(springManager);
 		
 		age++;
 		
@@ -72,11 +69,23 @@ public class ParticleAgent extends VerletParticle3D {
 				for (VerletParticle3D a:(ArrayList<VerletParticle3D>)neighbours){
 					if (springPhysics.getSpring(a, this) == null){
 				VerletSpring3D s = new VerletSpring3D(this, a, 50, 0.001f);
+				//VerletMinDistanceSpring3D s = new VerletMinDistanceSpring3D(this, a, 20, 0.0001f);
 					springPhysics.addSpring(s);
-				}
+			}
 				}
 			}
 
+	}
+	
+	
+	public void addSprings(VerletPhysics3D springPhysics){
+		if(springIt == true){
+		for (VerletParticle3D a:(ArrayList<VerletParticle3D>)neighbours){
+			VerletMinDistanceSpring3D s = new VerletMinDistanceSpring3D(this, a, 0.2f, 11f);
+			springPhysics.addSpring(s);
+		}
+		}
+		springIt = false;
 	}
 	
 	
@@ -94,6 +103,20 @@ public class ParticleAgent extends VerletParticle3D {
 	}
 	
 	
+	public void removeIfOverEmptyVoxels(SpringManager springManager){
+		
+			float voxVal = voxelGrid.getValue(this);
+			if (voxVal < 1){
+				Iterator i= springManager.springPhysics.particles.iterator();
+				while( i.hasNext()){
+				VerletParticle3D p1 = (VerletParticle3D)i.next();
+				VerletSpring3D s = springManager.springPhysics.getSpring(this, p1);
+				springManager.springPhysics.removeSpring(s);
+				System.out.println("remove");
+			}
+		}
+		removeParticle = false;
+	}
 	
 	
 	//------------------------------------------------------
@@ -120,27 +143,23 @@ public class ParticleAgent extends VerletParticle3D {
 		
 		if (age%update==0){
 			
-			
-			
-			
 		//get position of agent in voxel grid
 		int[] v = voxelGrid.map(this);
 		//get the vector to structural voxels with a val  between those defined within the search radius. Note: not the position of the voxel.
 		Vec3D toVoxel = voxelGrid.findValInRange(v[0], v[1], v[2], searchRadius, minVal, maxVal);
 		//System.out.println(toVoxel);
 		toVoxel.scaleSelf(1, 1, 1f);
-		
-		
-		
+
 		
 		float distance = toVoxel.magnitude();
 		if (distance < searchRadius){
 			
-			Vec3D awayFromVoxel = toVoxel; //repel Vec3D awayFromVoxel = toVoxel.getInverted();
+		//	Vec3D awayFromVoxel = toVoxel; 
+		Vec3D awayFromVoxel = toVoxel.getInverted();
 			//System.out.println(awayFromVoxel);
-			awayFromVoxel.scaleSelf(0.05f); //force factor
+		awayFromVoxel.scaleSelf(0.05f); //force factor
 			//System.out.println(awayFromVoxel);
-			addForce(awayFromVoxel);
+		addForce(awayFromVoxel);
 		}
 		
 		}

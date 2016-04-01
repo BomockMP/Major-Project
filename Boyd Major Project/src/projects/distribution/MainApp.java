@@ -16,9 +16,13 @@ import peasy.PeasyCam;
 import processing.core.PApplet;
 import processing.core.PImage;
 import projects.Purnululu.AnchorAgent;
+import toxi.geom.AABB;
+import toxi.geom.Vec2D;
 import toxi.geom.Vec3D;
+import toxi.physics2d.behaviors.AttractionBehavior2D;
 import toxi.physics3d.VerletParticle3D;
 import toxi.physics3d.VerletPhysics3D;
+import toxi.physics3d.behaviors.AttractionBehavior3D;
 import voxelTools.VoxelGrid;
 
 public class MainApp extends PApplet {
@@ -59,7 +63,10 @@ public class MainApp extends PApplet {
 		//voxels.initGrid();
 		
 		//trail spring p hysics
-		springPhysics = new VerletPhysics3D(new Vec3D(0,0,0.004f), 100, 0, 1); 
+		springPhysics = new VerletPhysics3D(new Vec3D(0,0,0.0f), 100, 0, 1); 
+		
+		//bounds from centre point to extents. 0 in Z direction.
+		springPhysics.setWorldBounds(new AABB(new Vec3D(dimX/2, dimY/2, 0), new Vec3D(100,100,0)));
 		
 		springManager = new SpringManager(springPhysics, 10000, this);
 		
@@ -70,12 +77,14 @@ public class MainApp extends PApplet {
 				float spawnptZ = random(0,200);
 				
 				
-			System.out.println(spawnptX);
+			
 			
 			ParticleAgent a  = new ParticleAgent(spawnptX, spawnptY, 0, voxels);
 			springPhysics.addParticle(a);
 			springManager.addAgent(a);
-
+			
+			springPhysics.addBehavior(new AttractionBehavior3D(a, 30, -1.2f, 1.2f));
+		
 		}
 		
 		
@@ -88,7 +97,7 @@ public class MainApp extends PApplet {
 	public void draw() {
 		
 		
-	//System.out.println(springPhysics.particles.size());	
+	System.out.println(springPhysics.springs.size());	
 		
 	background(100);
 	lights();
@@ -104,7 +113,7 @@ public class MainApp extends PApplet {
 	
 	springPhysics.update();
 	
-	System.out.println(springPhysics.springs.size());
+
 	
 	}
 	
@@ -136,6 +145,13 @@ public class MainApp extends PApplet {
 				for (int i = 0; i < springPhysics.particles.size(); i++){
 				VerletParticle3D p =  springPhysics.particles.get(i);
 				p.unlock();
+				}
+		}
+			
+			if (key == 'k'){
+				for (int i = 0; i < springPhysics.particles.size(); i++){
+				ParticleAgent p =  (ParticleAgent) springPhysics.particles.get(i);
+				p.removeIfOverEmptyVoxels(springManager);
 				}
 		}
 		

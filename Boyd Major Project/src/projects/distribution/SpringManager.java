@@ -15,7 +15,7 @@ import toxi.physics3d.VerletSpring3D;
 
 public class SpringManager {
 
-	
+	//todo remove long springs
 	
 	
 	public VerletPhysics3D springPhysics;
