@@ -781,7 +781,8 @@ public class VoxelGrid {
 					index = x + w * (y + h * z);
 					float val = vals[index].get()*sf;
 					if (val>threshold) {
-						parent.stroke(val);
+						float valInverted = parent.map(val, 0, 255, 255, 0); //invert colours
+						parent.stroke(valInverted);
 						parent.point((x*s.x)+extents.getMin().x,(y*s.y)+extents.getMin().y,(z*s.z)+extents.getMin().z);
 						//Vec3D normal = getNormal(x, y, z, 2);
 						//parent.line(x*s,y*s,z*s,x*s+normal.x*5,y*s+normal.y*5,z*s+normal.z*5);

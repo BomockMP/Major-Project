@@ -52,7 +52,7 @@ public void gradientVoxels(VoxelGrid voxelGrid){
 		//map z position in grid to possible voxel value range (1-255)
 		//float m =	pApplet.map(0, z, (float)voxelGrid.d, 255, 1);
 		
-		float m = pApplet.map(z, 0, voxelGrid.d, 1, 255);
+		float m = pApplet.map(0, z, voxelGrid.d, 255, 1);
 		
 		System.out.println(m); //debug
 		
@@ -64,7 +64,7 @@ public void gradientVoxels(VoxelGrid voxelGrid){
 				//get value
 				float value = voxelGrid.vals[index].get();
 				
-				//if its a terrain and the cell is filled with a value, do the following
+				//if its a terrain and the cell is filled with a value, do the following (so it only fills existing voxels defined by terrain
 				if (value > 0 && terrain == true){
 					voxelGrid.vals[index].set(m);
 					//System.out.println("terrain Gradient"); //debug
@@ -95,8 +95,9 @@ public void splitGrid(VoxelGrid voxelGrid, int splitHeight){
 		
 		//map z position in grid to possible voxel value range (1-255)
 		//float m =	pApplet.map(0, z, (float)voxelGrid.d, 255, 1);
+		//1-255 dark on top. 255-1 white on top.
 		
-		float m = pApplet.map(z, 0, splitHeight, 255, 1);
+		float m = pApplet.map(z, 0, splitHeight, 1, 255);
 		
 		System.out.println(m); //debug
 		
@@ -161,16 +162,10 @@ public void collapseVoxels(VoxelGrid voxelGrid){
 						voxelGrid.vals[indexBelow].set(value);
 						voxelGrid.vals[index].set(0);
 					}
-					
 				}
-				
-				
-					
 				}
 			}
 	}
-	
-	
 }
 
 	

@@ -67,7 +67,7 @@ public class MainApp extends PApplet {
 	
 		
 		//load image		
-		terrain = loadImage("hm5.png");
+		terrain = loadImage("hm2Foundation.png");
 		
 		//voxels
 		voxels = new VoxelGrid(dimX, dimY, dimZ, scale);

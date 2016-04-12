@@ -37,9 +37,9 @@ public class PurnululuMainApp extends PApplet {
 	PeasyCam cam;
 	
 	VoxelGrid voxels;
-	public static int dimX = 140;
-	public static int dimY = 250;
-	public static int dimZ = 30; //75
+	public static int dimX = 120;
+	public static int dimY = 120;
+	public static int dimZ = 60; //75
 	public static Vec3D scale = new Vec3D(1,1,1);
 	GradientVoxels gradientVoxels;
 
@@ -50,8 +50,7 @@ public class PurnululuMainApp extends PApplet {
 	
 	//spawn grid array
 	public int windAgentCount = 1500;
-	public int rainAgentCount = 0;
-	public int anchorAgentCount = 0;
+
 
 	//boundbox 
 //	public int bounds = dimX*(int)scale.y;
@@ -82,12 +81,10 @@ public class PurnululuMainApp extends PApplet {
 		noLights();
 	
 		
-		//springstuffAnchorTest
-		//trail spring p hysics
-		//springPhysics = new VerletPhysics3D(new Vec3D(0,0,0.000f), 50, 0, 1); 
+
 		
 		//load image		
-				terrain = loadImage("PHM1.png");
+				terrain = loadImage("hm2.png");
 		
 		//voxels
 		voxels = new VoxelGrid(dimX, dimY, dimZ, scale);
@@ -100,7 +97,7 @@ public class PurnululuMainApp extends PApplet {
 		//gradient terrain from dark at bottom to light at top
 		gradientVoxels = new GradientVoxels(voxels, false);
 		//gradientVoxels.run();
-		gradientVoxels.splitGrid(voxels, 20);
+		gradientVoxels.splitGrid(voxels, 30);
 	
 		//environment
 		environment = new Environment(this, 2000f);
@@ -111,8 +108,8 @@ public class PurnululuMainApp extends PApplet {
 		for (int i = 0; i < windAgentCount; i++) {
 			
 			
-			float spawnptY = random(5,240);
-			float spawnptZ = random(16,20);
+			float spawnptY = random(10,120);
+			float spawnptZ = random(5,20);
 			
 		if(i <= windAgentCount){
 			
@@ -152,31 +149,34 @@ public class PurnululuMainApp extends PApplet {
 		environment.update(false); //this is needed for neighbours to work
 	
 
-		canvas.drawPts(environment.pop, 1);
+		//canvas.drawPts(environment.pop, 2);
+		canvas.drawSandBank(environment.pop, 2);
+		
+		//canvas.drawVector(environment.pop, 1);
 		
 		if (frameCount%100==0){
 		gradientVoxels.collapseVoxels(voxels);
-		System.out.println("collapsed!");
+		//System.out.println("collapsed!");
 		}
 		
-		
-		
-		if (frameCount%700==0){
-			//voxels.blurall();
-			
-			
-			for (int z=0; z<voxels.d; z+=1) {
-				for (int y=0; y<voxels.h; y+=1) {
-					for (int x=0; x<voxels.w; x+=1) {
-						voxels.blur2d(x, y, z);
-					}
-				}
-			}
-			
-			
-			
-			System.out.println("c blurred!");
-			}
+		voxels.render(5, 1, 1, this);
+//		
+//		if (frameCount%700==0){
+//			//voxels.blurall();
+//			
+//			
+//			for (int z=0; z<voxels.d; z+=1) {
+//				for (int y=0; y<voxels.h; y+=1) {
+//					for (int x=0; x<voxels.w; x+=1) {
+//						voxels.blur2d(x, y, z);
+//					}
+//				}
+//			}
+//			
+//			
+//			
+//			System.out.println("c blurred!");
+//			}
 	}
 	
 	
@@ -189,7 +189,7 @@ public class PurnululuMainApp extends PApplet {
 		if (key == 's') {
 			
 			//render every 2nd voxel
-			voxels.render(3, 1, 1, this);
+			voxels.render(10, 50, 1, this);
 		}
 		
 		

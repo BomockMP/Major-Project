@@ -29,16 +29,18 @@ public class MainApp extends PApplet {
 
 	PeasyCam cam;
 	public Canvas canvas;
-	public int particleCount = 190;
+	public int particleCount = 110;
 	public VerletPhysics3D springPhysics;
 	public SpringManager springManager;
 	
 	VoxelGrid voxels;
-	public static int dimX = 300;
-	public static int dimY = 300;
+	public static int dimX = 400;
+	public static int dimY = 400;
 	public static int dimZ = 1;
 	public static Vec3D scale = new Vec3D(1,1,1);
 	PImage terrain;
+	
+	public int drawRad;
 	
 	
 	public void setup() {
@@ -46,15 +48,17 @@ public class MainApp extends PApplet {
 		
 		// CAMERA
 		size(1280, 720, OPENGL);
-		cam = new PeasyCam(this, 200);
+		cam = new PeasyCam(this, 500);
 		noLights();
+		
+		
 		
 		
 		//canvas
 		canvas = new Canvas(this.g);
 		
 		//load image		
-		terrain = loadImage("hm2.png");
+		terrain = loadImage("hm7.png");
 		
 		//voxels
 		voxels = new VoxelGrid(dimX, dimY, dimZ, scale);
@@ -63,29 +67,15 @@ public class MainApp extends PApplet {
 		//voxels.initGrid();
 		
 		//trail spring p hysics
-		springPhysics = new VerletPhysics3D(new Vec3D(0,0,0.0f), 100, 0, 1); 
+		springPhysics = new VerletPhysics3D(new Vec3D(0,0,0.0f), 200, 0.1f, 1); //150 
 		
 		//bounds from centre point to extents. 0 in Z direction.
-		springPhysics.setWorldBounds(new AABB(new Vec3D(dimX/2, dimY/2, 0), new Vec3D(dimX/2,dimY/2,0)));
+		springPhysics.setWorldBounds(new AABB(new Vec3D(dimX/2, dimY/2, 0), new Vec3D((dimX/2f)*0.9f,(dimY/2f)*0.9f,0)));
 		
 		springManager = new SpringManager(springPhysics, 10000, this);
 		
 		
-		for (int i = 0; i < particleCount; i++) {
-				float spawnptX = random(0,200);
-				float spawnptY = random(0,200);
-				float spawnptZ = random(0,200);
-				
-				
-			
-			
-			ParticleAgent a  = new ParticleAgent(spawnptX, spawnptY, 0, voxels);
-			springPhysics.addParticle(a);
-			springManager.addAgent(a);
-			//AttractionBehavior(toxi.geom.Vec3D attractor, float radius, float strength, float jitter) 
-			springPhysics.addBehavior(new AttractionBehavior3D(a, 100, -5f, 0.000f));
 		
-		}
 		
 		
 		
@@ -96,16 +86,47 @@ public class MainApp extends PApplet {
 	
 	public void draw() {
 		
-		
+		background(255);	
+		//fill(255, 100);
+		//rect(-width, -height, width*2, height*2);
 	//System.out.println(springPhysics.springs.size());	
 		
-	background(100);
-	lights();
-	voxels.render(3, 50, 1, this);
 	
+	lights();
+	
+	if (frameCount%1==0){
+	if (springPhysics.particles.size() < particleCount){
+		
+	//	for (int i = 0; i < particleCount; i++) {
+			float spawnptX = random(50,dimX*0.77f);
+			float spawnptY = random(180,dimY*0.80f);
+			float spawnptZ = random(0,200);
+			
+			
+		
+		
+		ParticleAgent a  = new ParticleAgent(spawnptX, spawnptY, 0, voxels);
+		springPhysics.addParticle(a);
+		springManager.addAgent(a);
+		//AttractionBehavior(toxi.geom.Vec3D attractor, float radius, float strength, float jitter) 
+		//springPhysics.addBehavior(new AttractionBehavior3D(a, 30, -0.03f)); //0.005
+	//springPhysics.addBehavior(new AttractionBehavior3D(a, 20, -5f, 0.001f));
+//	}	
+		}
+		}
+	
+	
+	
+	
+	
+	
+	
+	
+	voxels.render(1, 50, 1, this);
+	//
 	canvas.drawParticles(springPhysics.particles, 1f);
 	canvas.drawSpringPhysics(springPhysics.springs, 1f, 250f);
-	
+	canvas.drawParticleElipse(springPhysics.particles, drawRad);
 	
 	
 	springManager.update();
@@ -152,6 +173,14 @@ public class MainApp extends PApplet {
 				for (int i = 0; i < springPhysics.particles.size(); i++){
 				ParticleAgent p =  (ParticleAgent) springPhysics.particles.get(i);
 				p.removeIfOverEmptyVoxels(springManager);
+				}
+		}
+			
+			if (key == 'q'){
+				for (int i = 0; i < springPhysics.particles.size(); i++){
+				ParticleAgent p =  (ParticleAgent) springPhysics.particles.get(i);
+				p.LockIfOverPaintedVoxels(springManager);
+				springPhysics.addBehavior(new AttractionBehavior3D(p, 20, -0.1f)); //0.005
 				}
 		}
 		

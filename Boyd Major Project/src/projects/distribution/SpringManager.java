@@ -7,6 +7,7 @@ import core.Agent;
 import core.Plane3D;
 import pointCloudTools.Plane3DOctree;
 import processing.core.PApplet;
+import toxi.geom.AABB;
 import toxi.geom.Vec3D;
 import toxi.physics3d.VerletMinDistanceSpring3D;
 import toxi.physics3d.VerletParticle3D;
@@ -75,11 +76,19 @@ public class SpringManager {
 	
 	
 	//Getting neighbours
-	
+public ArrayList getWithinBox(Vec3D p, float rad){
+		
+		return pts.getPointsWithinBox(new AABB(p, rad));
+		
+		
+		
+	}
 	
 public ArrayList getWithinSphere(Vec3D p, float rad){
 		
 		return pts.getPointsWithinSphere(p,rad);
+		
+		
 		
 	}
 	
@@ -148,15 +157,16 @@ public void removeAll(){
 //-------------------------------------------------------------------------------------
 public void saveSpringParticles(int framecount){
 	ArrayList<String>lineList = new ArrayList<String>();
+	if(springPhysics.springs.size()>0){
 	for (VerletSpring3D a: springPhysics.springs) {
-		if(springPhysics.springs.size()>0){
+		
 			String c = "";
-			for(int i = 0; i<springPhysics.springs.size();i++){
-				VerletSpring3D l = springPhysics.springs.get(i);
+			//for(int i = 0; i<springPhysics.springs.size();i++){
+				//VerletSpring3D l = springPhysics.springs.get(i);
 				
-				c = c+l.a.x  +"," + l.a.y  + "," + l.a.z  +"/";
-				//c = c+l.b.x  +"," + l.b.y  + "," + l.b.z  +"/";
-			}
+				c = c+a.a.x  +"," + a.a.y  + "," + a.a.z  +"/";
+				c = c+a.b.x  +"," + a.b.y  + "," + a.b.z  +"/";
+			//}
 			lineList.add(c);
 		}
 	}
@@ -171,12 +181,34 @@ public void saveSpringParticles(int framecount){
 	
 	
 	
-	
-	
-	
-	
-	
-	
+//	
+//	
+////-------------------------------------------------------------------------------------
+//public void saveSpringParticles(int framecount){
+//	ArrayList<String>lineList = new ArrayList<String>();
+//	for (VerletSpring3D a: springPhysics.springs) {
+//		if(springPhysics.springs.size()>0){
+//			String c = "";
+//			//for(int i = 0; i<springPhysics.springs.size();i++){
+//				VerletSpring3D l = springPhysics.springs.get(i);
+//				
+//				c = c+l.a.x  +"," + l.a.y  + "," + l.a.z  +"/";
+//				//c = c+l.b.x  +"," + l.b.y  + "," + l.b.z  +"/";
+//			//}
+//			lineList.add(c);
+//		}
+//	}
+//	String[] skin = new String[lineList.size()];
+//	for (int i =0;i<lineList.size()-1;i++) {
+//		skin[i]=lineList.get(i);
+//	}
+//	parent.saveStrings("trails_"+framecount+".txt", skin);
+//}
+//	
+//	
+//	
+//	
+//	
 	
 	
 	//END

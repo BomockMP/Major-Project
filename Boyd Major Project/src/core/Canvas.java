@@ -4,13 +4,17 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import javax.media.opengl.GL2;
+import javax.swing.Box.Filler;
 
 import peasy.PeasyCam;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.opengl.PJOGL;
+import projects.Purnululu.WindAgent;
+import projects.distribution.ParticleAgent;
 import toxi.geom.Vec3D;
 import toxi.geom.mesh.Face;
 import toxi.geom.mesh.Mesh3D;
@@ -41,12 +45,70 @@ public class Canvas{
 		}
 	}
 	
+	public void drawSandBank(ArrayList pts, float rad){
+		graphics.strokeWeight(rad);
+		
+		for(WindAgent p:(ArrayList<WindAgent>) pts){
+			
+			float Sbank = p.sandBank;
+			float m = map(Sbank, 0, 10, 0, 255);
+			graphics.stroke(m);
+			graphics.point(p.x,p.y,p.z);
+		}
+	}
+	
+	
+	
+	
+	
 	//Boyd
 	public void drawParticles(List pts, float rad){
 		graphics.strokeWeight(rad);
 		graphics.stroke(255);
 		for(VerletParticle3D p:(List<VerletParticle3D>) pts){
 			graphics.point(p.x,p.y,p.z);
+		}
+	}
+	
+	public void drawParticleElipse(List pts, int rad){
+		graphics.strokeWeight(0);
+		//graphics.stroke(255);
+		int RADIUS = (int)rad;	
+		for(ParticleAgent p:(List<ParticleAgent>) pts){
+			rad = p.drawRad;
+			drawGradient(p.x, p.y, rad);
+			//graphics.point(p.x,p.y,p.z);
+		}
+	}
+	
+	
+	public void drawGradient(float x, float y, int rad){
+		
+		float h = map((float)rad, 0, rad, 0, 255);
+		int radius = rad;
+		
+		for (int r = 0; r<rad; r++){
+			graphics.fill(h, h/5);
+			graphics.ellipse(x, y, radius, radius);
+			h = h- 15;
+			radius--;
+			
+		}
+		
+	}
+	
+	
+	//Function for painting direction Vector of particle
+	public void drawVector(Collection collection, float s){
+	for(Object o:collection){
+			
+			Particle p = (Particle)o;
+			Vec3D v = p.vel.abs();
+			v.normalizeTo(5);
+			Vec3D futurePos = p.add(v);
+			graphics.strokeWeight(2);
+			graphics.stroke(255, 100, 100);
+			graphics.line(p.x, p.y, p.z, futurePos.x, futurePos.y, futurePos.z); 
 		}
 	}
 	
@@ -127,7 +189,7 @@ public class Canvas{
 			graphics.strokeWeight(size);
 			graphics.line(s.a.x, s.a.y, s.a.z, s.b.x, s.b.y, s.b.z); 
 			graphics.strokeWeight(size*2);
-			graphics.stroke(255);
+			graphics.stroke(greyscale, 150);
 			//if(s.a.locked())graphics.stroke(255,0,0);
 			graphics.point(s.a.x, s.a.y,s.a.z);
 
