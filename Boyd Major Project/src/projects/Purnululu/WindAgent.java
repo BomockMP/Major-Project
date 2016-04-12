@@ -73,45 +73,50 @@ public class WindAgent extends Agent {
 		setStartPos();
 		
 		//RESET POSITION OF PARTICLE IF OUT OF BOUNDS//MIN AND MAX.
-		if(!inBounds(-80, 150)){
+		if(!inBounds(-80, 260)){
 			reset();
 		}
 
 		windErosion(0.000001f);
 		windAddition(1f, 10f, 20, 3);
 		//FUNCTION FOR AVOIDING STRUCTURAL VOXELS (PAINTED) BETWEEN THE VALS AND WITHIN A SEARCH RADIUSS
-		avoidVoxels(voxelGrid, 5, 10f, 255f, 10f); //radius 4
+		avoidVoxels(voxelGrid, 3, 10f, 255f, 10f); //radius 4
 
 		//if particle moved past voxel grid start getting weighed down by sand
-if (this.x > 5){
-		sandWeight(-0.05f);
+		
+		
+if (this.x > 5 && this.z > 2){
+		sandWeight(-0.1f);
+	
 }
 		
-		if (this.x > randomX && randomSpiral > 0.25f)
-		{
-		spiral = true;
-		}
-	if(spiral == false){
-		
-		windMovement();
-	}	
-		if (spiral == true){
-		
-		if (age%spiralRate==0){
-			spiralMotion(1000f, 0.1f, 100f, 0.01f);
-			if(age%100==0){
-				if (spiralRate>0){
-				spiralRate--;
-				}else{
-					spiral = false;
-					this.vel.set(0,0,0);
-					windMovement();
-				}
-			}
-		}
-		}
 
-		//windMovement();
+
+//		if (this.x > randomX && randomSpiral > 0.25f)
+//		{
+//		spiral = true;
+//		}
+//	if(spiral == false){
+//		
+//		windMovement();
+//	}	
+//		if (spiral == true){
+//		
+//		if (age%spiralRate==0){
+//			spiralMotion(1000f, 0.1f, 100f, 0.01f);
+//			if(age%100==0){
+//				if (spiralRate>0){
+//				spiralRate--;
+//				}else{
+//					spiral = false;
+//					this.vel.set(0,0,0);
+//					windMovement();
+//				}
+//			}
+//		}
+//		}
+
+		windMovement();
 		update();
 
 	}
@@ -127,8 +132,8 @@ if (this.x > 5){
 		//wind
 		 Vec3D wind = new Vec3D(0,0,0);
 		 wind.x = (float) (0.4*randomStartingDirection*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
-		 wind.y = (float) 0.4*randomStartingDirection*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
-		 wind.z = (float) 0.1*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z));
+		 wind.y = (float) 0.05*randomStartingDirection*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
+		 wind.z = (float) 0.05*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z));
 
 		 if (direction == true){
 		 wind.scaleSelf(1);
@@ -223,14 +228,26 @@ public void windErosion(float erosionFactor){
 
 
 		
-		if ( voxVal >= 10){
+//		if ( voxVal > 254){
+//			//float newVal = voxVal*erosionFactor;
+//			//voxelGrid.setValue(this, newVal);
+//			//if (spiral == false){
+//			reset();
+//			//}
+//			
+//			} 
+		
+		
+		if ( voxVal >= 10 && voxVal  <= 255){
 		float newVal = voxVal*erosionFactor;
 		voxelGrid.setValue(this, newVal);
 		//if (spiral == false){
 		reset();
 		//}
 		
-		} if (voxVal < 10 && voxVal > 0) {
+		} 
+		
+		if (voxVal < 10 && voxVal > 0) {
 			voxelGrid.setValue(this, 0);	
 			//System.out.println("eaten");
 			sandBank++;
@@ -291,7 +308,7 @@ public void windAddition(float scaleFactor, float dropRate, int dropRadius, floa
 		//if its not at origin and the value is 0 then
 			
 			//System.out.println("painted");
-			voxelGrid.setValue(target, 255);
+			voxelGrid.setValue(target, 254);
 			sandBank--;
 			
 		}
@@ -315,6 +332,10 @@ public void windAddition(float scaleFactor, float dropRate, int dropRadius, floa
 	
 	
 	public void sandWeight(float strength){
+		
+		//grav
+		addForce(new Vec3D(0,0,strength));
+		
 		if (sandBank>0){
 			addForce(new Vec3D(0,0,strength));
 		}
@@ -358,8 +379,8 @@ public void windAddition(float scaleFactor, float dropRate, int dropRadius, floa
 	///----------------------------------------------------------------------------------------		  			
 		
 		public boolean inBounds(int boundsMin, int boundsMax) {
-			if (  x< boundsMin ||  y < -20 || z< -10 )return false;
-			if (x > boundsMax || y > 140 ||  z> 45 )return false;
+			if (  x< boundsMin ||  y < -20 || z< -3 )return false;
+			if (x > boundsMax || y > 260 ||  z> 45 )return false;
 			return true;
 		}
 	

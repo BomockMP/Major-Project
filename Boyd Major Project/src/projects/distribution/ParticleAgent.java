@@ -4,6 +4,8 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.xml.bind.ValidationEvent;
+
 import ProGAL.proteins.PDBFile.ParentRecord;
 import core.Agent;
 import core.Environment;
@@ -27,11 +29,14 @@ public class ParticleAgent extends VerletParticle3D {
 	public float connectionCount = 12;
 	public float springCount = 0;
 	
+	//dodge
+	public boolean once = true;
+	
 	public ParticleAgent(float x, float y, float z, VoxelGrid _voxelGrid) {
 		super(x, y, z);
 		voxelGrid = _voxelGrid;
 		random = (float)Math.random(); 
-		drawRad = 3;
+		drawRad = 14;
 	}
 
 	
@@ -39,23 +44,25 @@ public class ParticleAgent extends VerletParticle3D {
 	public void run(SpringManager springManager){
 		
 	
-		float searchRadius = 36f; //60*(float)random; //15
+		float searchRadius = 15f; //60*(float)random; //15
 		getNeighbours(this, searchRadius, springManager);
 		
 		
 		for(Vec3D a:(ArrayList<Vec3D>)neighbours){
-			repel(a, 0, 14, 0.07f, "exponential"); //0.0039 //0.06
+			repel(a, 0, 14, 0.03f, "exponential"); //0.0039 //0.06
 			//cohere(a, 30, 80, 0.01f, "exponential");
 			//align(this, a, 0, 50, 0.1f, "exponential");
 		}	
 		
 		
-		addSpringsToCloseParticles(springManager.springPhysics, (int)connectionCount, false); //3 connections
-		//addSprings(springManager.springPhysics);
-		//avoidVoxels(voxelGrid, 10, 0f, 1f, 100f, 0.1f);
-		//removeIfOverEmptyVoxels(springManager);
-		avoidVoxels(voxelGrid, 5, 1f, 255f, 1f, 0.03f);//0.006
-		//avoidVoxels(voxelGrid, 5, 1f, 255f, 1f, 0.006f);
+	//	addSpringsToCloseParticles(springManager.springPhysics, (int)connectionCount, false); //3 connections
+		
+		
+		
+		avoidVoxels(voxelGrid, 5, 1f, 255f, 1f, 0.006f);//0.006
+		
+		findEmptySpace(voxelGrid, 150, 0.003f);
+		
 		age++;
 		
 		
@@ -81,7 +88,7 @@ public class ParticleAgent extends VerletParticle3D {
 				for (ParticleAgent a:(ArrayList<ParticleAgent>)neighbours){
 					//float voxVal = voxelGrid.getValue(this);
 					if (springPhysics.getSpring(a, this) == null && springCount <= connectionCount/* *random && voxVal > 1*/ && a.springCount <= connectionCount ){
-						VerletSpring3D s = new VerletSpring3D(this, a, (float)15, (float) (0.001f)); //35 length //0.0008
+						VerletSpring3D s = new VerletSpring3D(this, a, (float)15, (float) (0.000001f)); //35 length //0.0008
 						//VerletMinDistanceSpring3D s = new VerletMinDistanceSpring3D(this, a, 20, 0.0001f);
 					springPhysics.addSpring(s);
 						springCount++;
@@ -104,17 +111,7 @@ public class ParticleAgent extends VerletParticle3D {
 	}
 	
 	
-	public void addSprings(VerletPhysics3D springPhysics){
-		if(springIt == true){
-		for (VerletParticle3D a:(ArrayList<VerletParticle3D>)neighbours){
-			VerletMinDistanceSpring3D s = new VerletMinDistanceSpring3D(this, a, 0.2f, 11f);
-			springPhysics.addSpring(s);
-		}
-		}
-		springIt = false;
-	}
-	
-	
+
 	
 	public void rise(){
 		if (this.z < 0){
@@ -127,6 +124,8 @@ public class ParticleAgent extends VerletParticle3D {
 		
 			
 	}
+	
+	
 	
 	
 	public void removeIfOverEmptyVoxels(SpringManager springManager){
@@ -183,9 +182,9 @@ public class ParticleAgent extends VerletParticle3D {
 	
 	
 	//------------------------------------------------------
-	//FUNCTION FOR AVOIDING THE STRUCTURALVOXELGRID
+	//FUNCTION FOR AVOIDING THE VOXELGRID
 	//------------------------------------------------------
-	//TODO ADD lock function if it hits desirable voxel
+	
 	//actually attracting
 	
 	public void avoidVoxels(VoxelGrid voxelGrid, int searchRadius, float minVal, float maxVal, float update, float forceScale){
@@ -215,7 +214,35 @@ public class ParticleAgent extends VerletParticle3D {
 	}
 	
 	
+	//function for attracting to empty voxels if stuck inside a voxel grid
+	//pushes them out of the way and then turns off
 	
+	public void findEmptySpace(VoxelGrid voxelGrid, int searchRadius, float forceScale){
+		
+	float val =	voxelGrid.getValue(this);
+	Vec3D toEmpty = new Vec3D(0,0,0);
+	
+	
+		if (val > 0 && once == true){
+		
+			int[] v = voxelGrid.map(this);
+			Vec3D toEmptyVoxel = voxelGrid.findValInRange(v[0], v[1], v[2], searchRadius, 0, 2);
+			toEmptyVoxel.normalizeTo(10f);
+			toEmpty = toEmptyVoxel.copy();
+			once = false;
+
+		}
+		addForce(toEmpty);
+		//System.out.println(toEmpty);
+		
+	
+	}
+	
+	
+	
+	//------------------------------------------------------
+	//FUNCTION FOR AVOIDING THE STRUCTURALVOXELGRID
+	//------------------------------------------------------
 	
 	
 	//lock

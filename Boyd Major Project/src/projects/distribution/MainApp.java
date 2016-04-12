@@ -29,7 +29,7 @@ public class MainApp extends PApplet {
 
 	PeasyCam cam;
 	public Canvas canvas;
-	public int particleCount = 110;
+	public int particleCount = 200;
 	public VerletPhysics3D springPhysics;
 	public SpringManager springManager;
 	
@@ -98,8 +98,8 @@ public class MainApp extends PApplet {
 	if (springPhysics.particles.size() < particleCount){
 		
 	//	for (int i = 0; i < particleCount; i++) {
-			float spawnptX = random(50,dimX*0.77f);
-			float spawnptY = random(180,dimY*0.80f);
+			float spawnptX = random(20,dimX*0.9f);
+			float spawnptY = random(40,dimY*0.8f);
 			float spawnptZ = random(0,200);
 			
 			
@@ -122,11 +122,11 @@ public class MainApp extends PApplet {
 	
 	
 	
-	voxels.render(1, 50, 1, this);
+	voxels.render(2, 50, 1, this);
 	//
-	canvas.drawParticles(springPhysics.particles, 1f);
-	canvas.drawSpringPhysics(springPhysics.springs, 1f, 250f);
-	canvas.drawParticleElipse(springPhysics.particles, drawRad);
+	canvas.drawParticles(springPhysics.particles, 15f);
+	canvas.drawSpringPhysics(springPhysics.springs, 1f, 0f);
+	//canvas.drawParticleElipse(springPhysics.particles, drawRad);
 	
 	
 	springManager.update();

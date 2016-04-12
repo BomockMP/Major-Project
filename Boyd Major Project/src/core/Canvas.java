@@ -64,7 +64,7 @@ public class Canvas{
 	//Boyd
 	public void drawParticles(List pts, float rad){
 		graphics.strokeWeight(rad);
-		graphics.stroke(255);
+		graphics.stroke(10);
 		for(VerletParticle3D p:(List<VerletParticle3D>) pts){
 			graphics.point(p.x,p.y,p.z);
 		}
