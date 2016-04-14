@@ -33,6 +33,7 @@ public class PatternedGrayScott extends GrayScott {
 	  }
 
 	  
+	  //not in use
 	  //source code for Seedimage
 	  @Override
 	  public void seedImage(int[] pixels, int imgWidth, int imgHeight) {
@@ -81,41 +82,102 @@ public class PatternedGrayScott extends GrayScott {
 	        		  return false;
 	        	  }
 	          }
+	
+	
+	
+	public float mapGrey(int x, int y){
+		
+		int c =  img.get(x, y);
+		//get value as brightness
+		float b = parent.brightness(c);
+
+		
+			return b;
+
+		
+	}
 
     
 	  
 public float getFCoeffAt(int x, int y) {
-  // here we only take the x coordinate
-  // and choose one of 2 options (even & odd)
 
-  boolean white = ChangeDiffusionAtColor(x, y);
-  if (white){
-	//  x/=1;
-	//  return 0==x%2 ? f : f-0.005f;
-	//return (float) (f*0.0001);
-	  return f+0.01f;
-	 // 
-	  
-  }else{
-  return f;
-  }
+
+//get brightness at point
+float b = mapGrey(x, y);
+	
+	
+// if the value is grey
+if (b < 255 && b > 0){		
+//map greyscale value to a range 1-10
+float mappedB = parent.map(b, 1, 254, 1, 30);
+return f+0.01f*(mappedB/5);
+}
+
+//if black
+if (b < 1){
+	return f;
+}
+
+//if white make it no go
+else{
+	return f+0.1f;
+}
+
+
+
 }
 	
 	
 public float getKCoeffAt(int x, int y) {
+	
+	//get brightness at point
+	float b = mapGrey(x, y);
+	
+	if (b < 255 && b > 0){		
+		//map greyscale value to a range 1-10
+		float mappedB = parent.map(b, 1, 254, 1, 20);
+		return k+0.01f*(mappedB/7);
+		}
+	//if black
+	if (b < 1){
+		return k;
+	}
+
+	//if white make it no go
+	else{
+		return k+0.1f;
+	}
+}
+	
+	
+	
+
+
+//boolean white = ChangeDiffusionAtColor(x, y);
+//if (white){
+////  x/=1;
+////  return 0==x%2 ? f : f-0.005f;
+////return (float) (f*0.0001);
+//  return f+0.01f;
+// // 
+//  
+//}else{
+//return f;
+//}
+	
 // here we only use the y coordinate
 // and create a gradient falloff for this param
-	
-	boolean white = ChangeDiffusionAtColor(x, y);
-	 if (white){
-		// return k-y*0.00004f;
-		// return k-y*0.00004f;
-		// return (float) (k*0.0001);
-		 return k+0.01f;
-	  }else{
-return k;
-} 
-}
+//	
+//	boolean white = ChangeDiffusionAtColor(x, y);
+//	 if (white){
+//		// return k-y*0.00004f;
+//		// return k-y*0.00004f;
+//		// return (float) (k*0.0001);
+//		 return k+0.01f;
+//	  }else{
+//return k;
+//} 
+
 
 
 

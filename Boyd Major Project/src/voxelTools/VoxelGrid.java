@@ -306,6 +306,9 @@ public class VoxelGrid {
 	 * @param index index of cell in the voxel array
 	 * @param val specified value
 	 */
+
+	
+
 	private void set(int index, float val){
 		vals[index].set(val);
 		colBuffer.put(index*4, val/255);
@@ -313,6 +316,8 @@ public class VoxelGrid {
 		colBuffer.put((index*4)+2, val/255);
 		colBuffer.put((index*4)+3, val/255);
 	}
+
+	
 	/**
 	 * Set the extents of the VoxelGrid
 	 * @param _extents AABB defining extents
