@@ -1,5 +1,7 @@
 package projects.greyScott;
 
+import core.Canvas;
+import core.Environment;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
@@ -14,11 +16,11 @@ import voxelTools.VoxelGrid;
 public class GreyScottMainApp extends PApplet {
 
 
-	PatternedGrayScott gs;
+	public PatternedGrayScott gs;
 	
-	ToneMap toneMap;
+	public ToneMap toneMap;
 
-	PImage terrain;
+	public PImage terrain;
 
 	public VoxelGrid voxels;
 	public int timeDepth = 100;
@@ -29,7 +31,9 @@ public class GreyScottMainApp extends PApplet {
 	public boolean draw3d = false;
 	public int zCount = 0;
 	
+	public Environment environment;
 	
+	public Canvas canvas;
 	
 	public void setup() {
 
@@ -52,8 +56,12 @@ public class GreyScottMainApp extends PApplet {
 	    voxels = new VoxelGrid(vWidth,vHeight,vDepth, new Vec3D(1,1,1));
 	    voxels.initGrid();
 	    
-	    
-	    
+	  //environment
+	  	environment = new Environment(this, 2000f);
+	  //canvas
+	  	canvas = new Canvas(this.g);
+	  		
+	  		
 	//    gs.seedImage(terrain.pixels, terrain.width, terrain.height);
 	    
 	    
@@ -85,6 +93,10 @@ public class GreyScottMainApp extends PApplet {
 		
 		
 	
+		for (int i = 0; i < 1; i++){
+			GSAgent a = new GSAgent(new Vec3D(250,250,-10), false, terrain, gs);
+			environment.pop.add(a);
+		}
 	    
 	    
 	    
@@ -93,8 +105,11 @@ public class GreyScottMainApp extends PApplet {
 public	void draw() {
 	
 	
-	
-	
+	background(100);
+	lights();
+	environment.run();
+	environment.update(false); //this is needed for neighbours to work
+
 	
 		  if (mousePressed) {
 		    // set cells around mouse pos to max saturation
@@ -155,8 +170,8 @@ public	void draw() {
 		  
 		  
 		  
-		  
-		  
+		 //draw agent over the top
+		canvas.drawPts(environment.pop, 5);
 		  
 		  
 		}

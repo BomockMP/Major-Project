@@ -6,6 +6,7 @@ import java.util.Random;
 import javax.print.attribute.Size2DSyntax;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
 
+import processing.core.PImage;
 import toxi.geom.*;
 import toxi.math.InterpolateStrategy;
 import toxi.physics2d.behaviors.AttractionBehavior2D;
@@ -40,6 +41,8 @@ public class Agent extends Plane3D {
 
 	//physics
 	public VerletPhysics3D physics;
+	
+
 	
 	//voxel tools
 	public int searchRadius = 20;
@@ -94,6 +97,9 @@ public class Agent extends Plane3D {
 	}
 	
 	
+	
+
+
 
 	//-------------------------------------------------------------------------------------
 
