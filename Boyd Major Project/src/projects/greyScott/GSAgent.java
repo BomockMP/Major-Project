@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.vividsolutions.jts.geomgraph.Position;
+
 import processing.core.PImage;
+import toxi.geom.Line2D;
 import toxi.geom.Vec2D;
 import toxi.geom.Vec3D;
 import voxelTools.Cell;
@@ -18,13 +21,15 @@ public class GSAgent extends Agent{
 	//pimage
 	public PImage img;
 	public PatternedGrayScott gs;
+	public Path path;
 
 	
-	public GSAgent (Vec3D _o, boolean _f, PImage _img, PatternedGrayScott _gs){
+	public GSAgent (Vec3D _o, boolean _f, PImage _img, PatternedGrayScott _gs, Path _path ){
 		super (_o, _f);
 		f=_f;
 		img = _img;
 		gs = _gs;
+		path = _path;
 		resetTrail();
 		
 	}
@@ -33,14 +38,100 @@ public class GSAgent extends Agent{
 		public void run(Environment environment) {
 			
 		//ReadGS();
-			avoidGSspots(5, 200, 255, 1);
-			AvoidBrightness(5, 200, 255, 1);
-			paintToPImage(1, 30, false);
+			//avoidGSspots(5, 200, 255, 1);
+			//AvoidBrightness(5, 200, 255, 1);
+			//paintToPImage(1, 2, false);
+			follow(path, 5);
 		update();
 		}
 	
 	
 	
+		
+		//Path Steering Behaviours
+		
+		//check if vehicles future location is on path
+		//if future loc is on path, do nothing
+		//else, find closest point on the path - aka normal
+		//move along the path a bit - aka the future position of the normal - a target further along
+		//attract to that position
+		
+		
+		public void follow(Path path, float pathRadius){
+			
+			
+			//get future location
+			Vec3D futureloc = vel.copy();
+			futureloc.scaleSelf(10);
+			Vec3D predictedLoc = this.add(futureloc);
+			Vec2D predictedLocFlattened = predictedLoc.to2DXY();
+			//check if vehicles future location is on path 
+			//get normal to the path and check if the magnitude of this normal is less than the desired path radius
+			//Vec2D closestPathNormal = path.getClosestNormal(predictedLocFlattened);
+		
+			//System.out.println(this);
+			
+			
+			Line2D closestSegment = path.getClosestLineSegment(predictedLocFlattened);
+			
+			//System.out.println(closestSegment);
+			
+			Vec2D closestPoint = closestSegment.closestPointTo(predictedLocFlattened);
+			if (closestPoint.magnitude() > pathRadius){
+				// if the Mag > path radius, it is not on the path
+				
+			
+				
+
+				//get position slightly further along the path by getting the direction of the path segment
+				Vec2D lineDir = closestSegment.getDirection();
+				
+			
+				lineDir.normalize();
+				
+				
+				
+				//Desired Vector Position
+				Vec2D desiredPos = closestPoint.add(lineDir);
+				Vec3D desiredPos3d = desiredPos.to3DXY();
+				
+				System.out.println(this);
+				System.out.println(desiredPos);
+				//scale force
+				
+				cohere(desiredPos3d, 0f, 500f, 10f, "exponential");
+				//Vec3D desiredPos3d = desiredPos.to3DXY();
+				//addForce(desiredPos3d);
+	
+				
+			}
+		
+			
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		public void changeFCoefficient(float val){
+			Vec2D position = this.to2DXY().getFloored();
+			//gs.changeKCoeffAt((int)position.x, (int)position.y, val);
+			//gs.changeFCoeffAt((int)position.x, (int)position.y, val);
+		}
+		
+		
+		
+		
+		
 		//function for reading GS & setting to it
 		public void ReadGS(){
 			

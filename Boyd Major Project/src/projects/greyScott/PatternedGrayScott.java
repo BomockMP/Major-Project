@@ -33,7 +33,7 @@ public class PatternedGrayScott extends GrayScott {
 	  }
 
 	  
-	  //not in use
+	  
 	  //source code for Seedimage
 	  @Override
 	  public void seedImage(int[] pixels, int imgWidth, int imgHeight) {
@@ -90,14 +90,32 @@ public class PatternedGrayScott extends GrayScott {
 		int c =  img.get(x, y);
 		//get value as brightness
 		float b = parent.brightness(c);
-
-		
 			return b;
-
-		
 	}
 
     
+	
+//public float changeFCoeffAt(int x, int y, float val){
+//	//f = getFCoeffAt(x, y);
+//	//float changedval = Fco+val;
+//	//f = Fco+val;
+//		//System.out.println(f);
+//	return f+val;
+//}
+//	
+//
+//
+//public float changeKCoeffAt(int x, int y, float val){
+//	//float kAtPos = getKCoeffAt(x, y);
+//	//k = KCo + val;
+//	//System.out.println(f);
+//	return k+ val;
+//}
+//	
+
+
+
+
 	  
 public float getFCoeffAt(int x, int y) {
 
@@ -107,14 +125,20 @@ float b = mapGrey(x, y);
 	
 	
 // if the value is grey
-if (b < 255 && b > 0){		
+if (b < 255 && b > 2){		
 //map greyscale value to a range 1-10
 float mappedB = parent.map(b, 1, 254, 1, 30);
 return f+0.01f*(mappedB/5);
 }
 
+
+if (b==2){
+	return f-0.04f;
+}
+
+
 //if black
-if (b < 1){
+if (b < 2){
 	return f;
 }
 
@@ -133,13 +157,27 @@ public float getKCoeffAt(int x, int y) {
 	//get brightness at point
 	float b = mapGrey(x, y);
 	
-	if (b < 255 && b > 0){		
+	
+	//if agent specific gradient
+	
+	
+	
+	
+	if (b < 255 && b > 2){		
 		//map greyscale value to a range 1-10
 		float mappedB = parent.map(b, 1, 254, 1, 20);
 		return k+0.01f*(mappedB/7);
 		}
+	
+	
+	
+	if (b==2){
+		return k-0.02f;
+	}
+	
+	
 	//if black
-	if (b < 1){
+	if (b < 2){
 		return k;
 	}
 

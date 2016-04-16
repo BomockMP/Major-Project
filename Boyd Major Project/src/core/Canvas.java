@@ -15,6 +15,8 @@ import processing.core.PGraphics;
 import processing.opengl.PJOGL;
 import projects.Purnululu.WindAgent;
 import projects.distribution.ParticleAgent;
+import projects.greyScott.Path;
+import toxi.geom.Vec2D;
 import toxi.geom.Vec3D;
 import toxi.geom.mesh.Face;
 import toxi.geom.mesh.Mesh3D;
@@ -58,6 +60,22 @@ public class Canvas{
 	}
 	
 	
+	public void drawSplinePoints(Path path){
+		
+		List<Vec2D> pList = path.splinePath.getPointList();
+		for (Vec2D v : pList){
+			graphics.stroke(200);
+			graphics.point(v.x,v.y);
+		}
+		
+		
+		List<Vec2D> vList = path.strip.getVertices();
+		for (Vec2D v : vList){
+			graphics.stroke(100);
+			graphics.point(v.x,v.y);
+		}
+		
+	}
 	
 	
 	

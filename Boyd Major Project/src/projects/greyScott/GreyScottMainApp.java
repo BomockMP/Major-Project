@@ -1,5 +1,7 @@
 package projects.greyScott;
 
+import java.util.ArrayList;
+
 import core.Canvas;
 import core.Environment;
 import processing.core.PApplet;
@@ -7,6 +9,7 @@ import processing.core.PGraphics;
 import processing.core.PImage;
 import toxi.sim.grayscott.GrayScott;
 import toxi.color.*;
+import toxi.geom.Vec2D;
 import toxi.geom.Vec3D;
 import toxi.util.*;
 import toxi.util.datatypes.*;
@@ -35,6 +38,8 @@ public class GreyScottMainApp extends PApplet {
 	
 	public Canvas canvas;
 	
+	public Path path;
+	
 	public void setup() {
 
 		    size(500,500, OPENGL);
@@ -60,12 +65,24 @@ public class GreyScottMainApp extends PApplet {
 	  	environment = new Environment(this, 2000f);
 	  //canvas
 	  	canvas = new Canvas(this.g);
+	  	
+	  	
+	  	//AGENT PATH TESTING
+	  	ArrayList<Vec2D>pathPts = new ArrayList<Vec2D>();
+	  	for (int i = 0; i < 10; i++){
+	  		pathPts.add(new Vec2D(random(500), random(500)));
+	  	}
+	  	path = new Path(pathPts);
+	  	path.initiatePath();
+	  	
+	  
 	  		
-	  		
-	//    gs.seedImage(terrain.pixels, terrain.width, terrain.height);
-	    
-	    
-	    
+
+	  	
+	  	
+	  	
+	  	
+	  	
 	 // define a color gradient by adding colors at certain key points
 		// a gradient is like a 1D array with target colors at certain points
 		// all inbetween values are automatically interpolated (customizable too)
@@ -94,7 +111,7 @@ public class GreyScottMainApp extends PApplet {
 		
 	
 		for (int i = 0; i < 1; i++){
-			GSAgent a = new GSAgent(new Vec3D(250,250,-10), false, terrain, gs);
+			GSAgent a = new GSAgent(new Vec3D(250,250,0), false, terrain, gs, path);
 			environment.pop.add(a);
 		}
 	    
@@ -172,6 +189,7 @@ public	void draw() {
 		  
 		 //draw agent over the top
 		canvas.drawPts(environment.pop, 5);
+		canvas.drawSplinePoints(path);
 		  
 		  
 		}
