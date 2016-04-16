@@ -38,9 +38,9 @@ public class GSAgent extends Agent{
 		public void run(Environment environment) {
 			
 		//ReadGS();
-			//avoidGSspots(5, 200, 255, 1);
-			//AvoidBrightness(5, 200, 255, 1);
-			//paintToPImage(1, 2, false);
+			//avoidGSspots(5, 200, 255, 0.1f);
+			AvoidBrightness(5, 200, 255, 0.1f);
+			paintToPImage(1, 0, false);
 			follow(path, 5);
 		update();
 		}

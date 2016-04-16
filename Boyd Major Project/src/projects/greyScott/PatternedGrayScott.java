@@ -18,7 +18,8 @@ public class PatternedGrayScott extends GrayScott {
 	public ArrayList paintedIndex;
 	public int[] vals;
 	public PApplet parent;
-	
+	public float greyThresholdK = 21;
+	public float greyThresholdF = 22;
 	
 	
 	  // our constructor just passes things on to the parent class
@@ -125,24 +126,25 @@ float b = mapGrey(x, y);
 	
 	
 // if the value is grey
-if (b < 255 && b > 2){		
+if (b < 255 && b > greyThresholdF){		
 //map greyscale value to a range 1-10
 float mappedB = parent.map(b, 1, 254, 1, 30);
 return f+0.01f*(mappedB/5);
 }
 
 
-if (b==2){
+//if black
+if (b<2){
 	return f-0.04f;
 }
 
 
-//if black
-if (b < 2){
+//if dark grey
+if (b >= 2 && b <= greyThresholdF){
 	return f;
 }
 
-//if white make it no go
+//if white (255) make it no go
 else{
 	return f+0.1f;
 }
@@ -163,7 +165,7 @@ public float getKCoeffAt(int x, int y) {
 	
 	
 	
-	if (b < 255 && b > 2){		
+	if (b < 255 && b > greyThresholdK){		
 		//map greyscale value to a range 1-10
 		float mappedB = parent.map(b, 1, 254, 1, 20);
 		return k+0.01f*(mappedB/7);
@@ -171,13 +173,13 @@ public float getKCoeffAt(int x, int y) {
 	
 	
 	
-	if (b==2){
+	if (b<2){
 		return k-0.02f;
 	}
 	
 	
-	//if black
-	if (b < 2){
+	//if dark grey
+	if (b >= 2 && b <= greyThresholdK){
 		return k;
 	}
 

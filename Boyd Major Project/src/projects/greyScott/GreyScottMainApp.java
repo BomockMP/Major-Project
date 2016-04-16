@@ -44,7 +44,7 @@ public class GreyScottMainApp extends PApplet {
 
 		    size(500,500, OPENGL);
 		    
-		    terrain = loadImage("smhm500b.png");
+		    terrain = loadImage("SiteHM7A.png");
 		    terrain.resize(vWidth, vHeight); //make sure image same size as grid and gs
 		    
 	    gs= new PatternedGrayScott(vWidth,vWidth,false,terrain, this);
@@ -69,9 +69,29 @@ public class GreyScottMainApp extends PApplet {
 	  	
 	  	//AGENT PATH TESTING
 	  	ArrayList<Vec2D>pathPts = new ArrayList<Vec2D>();
-	  	for (int i = 0; i < 10; i++){
-	  		pathPts.add(new Vec2D(random(500), random(500)));
-	  	}
+	  	//for (int i = 0; i < 10; i++){
+	  		pathPts.add(new Vec2D(344,483));
+	  		pathPts.add(new Vec2D(360,403));
+	  		pathPts.add(new Vec2D(326,340));
+	  		pathPts.add(new Vec2D(325,404));
+	  		pathPts.add(new Vec2D(288,389));
+	  		pathPts.add(new Vec2D(312,316));
+	  		pathPts.add(new Vec2D(261, 265));
+	  		pathPts.add(new Vec2D(217,326));
+	  		pathPts.add(new Vec2D(253,395));
+	  		pathPts.add(new Vec2D(197,445));
+	  		pathPts.add(new Vec2D(152,408));
+	  		pathPts.add(new Vec2D(211,358));
+	  		pathPts.add(new Vec2D(149,341));
+	  		pathPts.add(new Vec2D(119,415));
+	  		pathPts.add(new Vec2D(51,409));
+	  		pathPts.add(new Vec2D(59,333));
+	  		pathPts.add(new Vec2D(136,310));
+	  		pathPts.add(new Vec2D(146,235));
+	  		pathPts.add(new Vec2D(219,243));
+	  		pathPts.add(new Vec2D(182,305));
+	  		
+	  	//}
 	  	path = new Path(pathPts);
 	  	path.initiatePath();
 	  	
@@ -111,7 +131,7 @@ public class GreyScottMainApp extends PApplet {
 		
 	
 		for (int i = 0; i < 1; i++){
-			GSAgent a = new GSAgent(new Vec3D(250,250,0), false, terrain, gs, path);
+			GSAgent a = new GSAgent(new Vec3D(344,483,0), false, terrain, gs, path);
 			environment.pop.add(a);
 		}
 	    
