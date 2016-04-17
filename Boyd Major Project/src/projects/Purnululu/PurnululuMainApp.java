@@ -49,9 +49,11 @@ public class PurnululuMainApp extends PApplet {
 	public Canvas canvas;
 	
 	//spawn grid array
-	public int windAgentCount = 1500;
-
-
+	public int windAgentCountXPos = 200;
+	public int windAgentCountYPos = 200;
+	public int windAgentCountXNeg = 200;
+	public int windAgentCountYNeg = 200;
+	
 	//boundbox 
 //	public int bounds = dimX*(int)scale.y;
 //	public int boundScale = (int) (bounds + (0.1f*bounds));
@@ -92,12 +94,12 @@ public class PurnululuMainApp extends PApplet {
 		voxels.initGrid();
 		
 		//call create terrain function
-		voxels.createTerrain(terrain);
+		//voxels.createTerrain(terrain);
 		
 		//gradient terrain from dark at bottom to light at top
-		gradientVoxels = new GradientVoxels(voxels, true);
+		gradientVoxels = new GradientVoxels(voxels, false);
 		//gradientVoxels.run();
-		//gradientVoxels.splitGrid(voxels, 7);
+		gradientVoxels.splitGrid(voxels, 12);
 	
 		//environment
 		environment = new Environment(this, 2000f);
@@ -105,28 +107,37 @@ public class PurnululuMainApp extends PApplet {
 		canvas = new Canvas(this.g);
 
 		
-		for (int i = 0; i < windAgentCount; i++) {
-			
-			
+		for (int i = 0; i < windAgentCountXPos; i++) {
+			float spawnptX = -35;
 			float spawnptY = random(10,240);
 			float spawnptZ = random(4,7);
-			
-		if(i <= windAgentCount){
-			
-			WindAgent a = new WindAgent(new Vec3D(-35, spawnptY, spawnptZ), false, voxels, this, true);
+			WindAgent a = new WindAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this, "posX");
 			environment.pop.add(a);
-		// }else{ 
-//		WindAgent a = new WindAgent(new Vec3D(225, spawnptY, 55), false, voxels, this, false);		
-//		environment.pop.add(a);
-			
-		 }
 	}
 		
+		for (int i = 0; i < windAgentCountYPos; i++) {
+			float spawnptX = random(10,240);
+			float spawnptY = -35;
+			float spawnptZ = random(4,7);
+			WindAgent a = new WindAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this, "posY");
+			environment.pop.add(a);
+	}
 
-
+		for (int i = 0; i < windAgentCountXNeg; i++) {
+			float spawnptX = dimX+35;
+			float spawnptY = random(10,240);
+			float spawnptZ = random(4,7);
+			WindAgent a = new WindAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this, "negX");
+			environment.pop.add(a);
+	}
 		
-		
-		
+		for (int i = 0; i < windAgentCountYNeg; i++) {
+			float spawnptX = random(10,240);
+			float spawnptY = dimY+35;
+			float spawnptZ = random(4,7);
+			WindAgent a = new WindAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this, "negY");
+			environment.pop.add(a);
+	}	
 		
 		
 		

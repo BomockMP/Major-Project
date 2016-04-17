@@ -26,7 +26,7 @@ public class WindAgent extends Agent {
 	public float TWO_PI = 6.28318530717958647693f;
 
 	public boolean startpBoolean = true;
-	public boolean direction = true;
+	public String direction;
 	public float randomStartingDirection = 1;
 	public boolean bounds = true;
 	
@@ -41,7 +41,7 @@ public class WindAgent extends Agent {
 	float randomX;
 	float randomZ;
 	//CONSTRUCTOR
-	public WindAgent(Vec3D _o, boolean _f, VoxelGrid _voxelGrid, PApplet _parent, boolean _direction) {
+	public WindAgent(Vec3D _o, boolean _f, VoxelGrid _voxelGrid, PApplet _parent, String _direction) {
 		super(_o, _f);
 		voxelGrid = _voxelGrid;
 		parent = _parent;
@@ -73,7 +73,7 @@ public class WindAgent extends Agent {
 		setStartPos();
 		
 		//RESET POSITION OF PARTICLE IF OUT OF BOUNDS//MIN AND MAX.
-		if(!inBounds(-80, 260)){
+		if(!inBounds(-80, 300)){
 			reset();
 		}
 
@@ -85,10 +85,10 @@ public class WindAgent extends Agent {
 		//if particle moved past voxel grid start getting weighed down by sand
 		
 		
-if (this.x > 5 && this.z > 2){
-		sandWeight(-0.1f);
-	
-}
+//if (this.x > 5 && this.z > 2){
+//		sandWeight(-0.1f);
+//	
+//}
 		
 
 
@@ -116,7 +116,7 @@ if (this.x > 5 && this.z > 2){
 //		}
 //		}
 
-		windMovement();
+		windMovement(direction, 1f);
 		update();
 
 	}
@@ -126,23 +126,75 @@ if (this.x > 5 && this.z > 2){
 	//FUNCTION FOR MOVEMENT
 	//------------------------------------------------------
 	@SuppressWarnings("static-access")
-	public void windMovement(){
+	public void windMovement(String direction, float scaleForce){
 		
-		
+
 		//wind
 		 Vec3D wind = new Vec3D(0,0,0);
-		 wind.x = (float) (0.4*randomStartingDirection*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
-		 wind.y = (float) 0.05*randomStartingDirection*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
-		 wind.z = (float) 0.05*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z));
-
-		 if (direction == true){
-		 wind.scaleSelf(1);
-		addForce(wind.getInverted());
-		 }else{
-			 wind.scaleSelf(-1);
-				addForce(wind.getInverted());
+		 
+		 
+//		 switch (direction) {
+//		case "posX": wind = windXPos();
+//		case "posY": wind = windYPos();	
+//		case "negX": wind = windXNeg();	
+//		case "negY": wind = windYNeg();	
+//		}
+		 
+		 if (direction == "posX"){
+			 wind = windXPos(); 
 		 }
+		 
+		 if (direction == "posY"){
+			 wind = windYPos(); 
+		 }
+		 
+		 if (direction == "negX"){
+			 wind = windXNeg(); 
+		 }
+		 
+		 if (direction == "negY"){
+			 wind = windYNeg(); 
+		 }
+		 
+		 wind.scaleSelf(scaleForce);
+		 addForce(wind);
 	}
+	
+	
+	//WIND DIRECTION CASES
+	
+	public Vec3D windXPos(){
+		Vec3D wind = new Vec3D(0,0,0);
+		 wind.x = (float) (0.5*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
+		 wind.y = (float) 0.4*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
+		 wind.z = (float) 0.005*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z));
+		return wind.getInverted();
+	}
+	
+	public Vec3D windYPos(){
+		Vec3D wind = new Vec3D(0,0,0);
+		 wind.x = (float) (0.4*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
+		 wind.y = (float)(0.5*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z)));   //increasing value before X is good
+		 wind.z = (float) (0.005*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z)));
+		return wind.getInverted();
+	}
+	
+	public Vec3D windXNeg(){
+		Vec3D wind = new Vec3D(0,0,0);
+		 wind.x = (float) (0.5*randomStartingDirection*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
+		 wind.y = (float) 0.4*randomStartingDirection*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
+		 wind.z = (float) 0.05*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z));
+		return wind;
+	}
+	
+	public Vec3D windYNeg(){
+		Vec3D wind = new Vec3D(0,0,0);
+		 wind.x = (float) (0.4*randomStartingDirection*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
+		 wind.y = (float) 0.5*randomStartingDirection*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
+		 wind.z = (float) 0.05*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z));
+		return wind;
+	}
+
 	
 	
 	
@@ -379,8 +431,8 @@ public void windAddition(float scaleFactor, float dropRate, int dropRadius, floa
 	///----------------------------------------------------------------------------------------		  			
 		
 		public boolean inBounds(int boundsMin, int boundsMax) {
-			if (  x< boundsMin ||  y < -20 || z< -3 )return false;
-			if (x > boundsMax || y > 260 ||  z> 45 )return false;
+			if (  x< boundsMin ||  y < boundsMin || z< -3 )return false;
+			if (x > boundsMax || y > boundsMax ||  z> 45 )return false;
 			return true;
 		}
 	
