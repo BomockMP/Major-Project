@@ -116,6 +116,20 @@ public class VoxelGrid {
 			}
 		}
 	}
+	
+	public void createTerrainAlt(PImage loadedImage, float depthlimit) {
+		loadedImage.resize(w, h);
+
+		for (int i = 0; i<w; i++) {
+			for (int j = 0; j<h; j++) {
+				int v = (int) (((loadedImage.pixels[(j*w)+i]>> 16) & 0xFF)*(d-depthlimit)/255);
+				for (int k=0; k<v; k++) {
+					int index = i + w * (j + h * k);
+					set(index,(1-((float)k/v))*255);
+				}
+			}
+		}
+	}
 	/**
 	 * Remap image to w and d of the VoxelGrid and set cell values at z layer to greyscale of image
 	 * 

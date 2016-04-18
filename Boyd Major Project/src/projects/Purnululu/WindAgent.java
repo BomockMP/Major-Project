@@ -38,8 +38,13 @@ public class WindAgent extends Agent {
 	public boolean spiral = false;
 	public float randomSpiral;
 	public float XdepositPosition;
+	public float XdepositPositionMax;
+	public float YXdepositPosition;
+	public float YdepositPositionMax;
+	
 	float randomX;
 	float randomZ;
+	public float windLateral = 0.4f;
 	//CONSTRUCTOR
 	public WindAgent(Vec3D _o, boolean _f, VoxelGrid _voxelGrid, PApplet _parent, String _direction) {
 		super(_o, _f);
@@ -77,18 +82,18 @@ public class WindAgent extends Agent {
 			reset();
 		}
 
-		windErosion(0.000001f);
-		windAddition(1f, 10f, 20, 3);
+		windErosion(0.05f);
+		windAddition(1f, 10f, 8, 5);
 		//FUNCTION FOR AVOIDING STRUCTURAL VOXELS (PAINTED) BETWEEN THE VALS AND WITHIN A SEARCH RADIUSS
-		avoidVoxels(voxelGrid, 3, 10f, 255f, 10f); //radius 4
+		avoidVoxels(voxelGrid, 3, 10f, 255f, 8f); //radius 4
 
 		//if particle moved past voxel grid start getting weighed down by sand
 		
 		
-//if (this.x > 5 && this.z > 2){
-//		sandWeight(-0.1f);
-//	
-//}
+if (this.x > 5 && this.z > 2 && this.x < 245 ){
+		sandWeight(-0.03f);
+	
+}
 		
 
 
@@ -166,14 +171,14 @@ public class WindAgent extends Agent {
 	public Vec3D windXPos(){
 		Vec3D wind = new Vec3D(0,0,0);
 		 wind.x = (float) (0.5*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
-		 wind.y = (float) 0.4*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
+		 wind.y = (float) windLateral*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
 		 wind.z = (float) 0.005*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z));
 		return wind.getInverted();
 	}
 	
 	public Vec3D windYPos(){
 		Vec3D wind = new Vec3D(0,0,0);
-		 wind.x = (float) (0.4*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
+		 wind.x = (float) (windLateral*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
 		 wind.y = (float)(0.5*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z)));   //increasing value before X is good
 		 wind.z = (float) (0.005*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z)));
 		return wind.getInverted();
@@ -181,16 +186,16 @@ public class WindAgent extends Agent {
 	
 	public Vec3D windXNeg(){
 		Vec3D wind = new Vec3D(0,0,0);
-		 wind.x = (float) (0.5*randomStartingDirection*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
-		 wind.y = (float) 0.4*randomStartingDirection*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
+		 wind.x = (float) (0.5*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
+		 wind.y = (float) (windLateral*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z)));   //increasing value before X is good
 		 wind.z = (float) 0.05*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z));
 		return wind;
 	}
 	
 	public Vec3D windYNeg(){
 		Vec3D wind = new Vec3D(0,0,0);
-		 wind.x = (float) (0.4*randomStartingDirection*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
-		 wind.y = (float) 0.5*randomStartingDirection*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
+		 wind.x = (float) (windLateral*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
+		 wind.y = (float) 0.5*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
 		 wind.z = (float) 0.05*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z));
 		return wind;
 	}
@@ -204,6 +209,13 @@ public class WindAgent extends Agent {
 			startPos = this.copy();
 			randomSpiral = parent.random(0,1);
 			XdepositPosition = parent.random(2,8);
+			XdepositPositionMax = parent.random(115,145);	
+			YXdepositPosition = parent.random(2,8);
+			YdepositPositionMax = parent.random(115,120);
+			
+			
+			
+			
 			randomX = parent.random(70, 110);
 			startpBoolean = false;
 			
@@ -290,7 +302,7 @@ public void windErosion(float erosionFactor){
 //			} 
 		
 		
-		if ( voxVal >= 10 && voxVal  <= 255){
+		if ( voxVal >= 10 && voxVal  <= 255 && this.z>1){
 		float newVal = voxVal*erosionFactor;
 		voxelGrid.setValue(this, newVal);
 		//if (spiral == false){
@@ -299,7 +311,7 @@ public void windErosion(float erosionFactor){
 		
 		} 
 		
-		if (voxVal < 10 && voxVal > 0) {
+		if (voxVal < 10 && voxVal > 0 && this.z>1) {
 			voxelGrid.setValue(this, 0);	
 			//System.out.println("eaten");
 			sandBank++;
@@ -315,7 +327,7 @@ public void windAddition(float scaleFactor, float dropRate, int dropRadius, floa
 		Vec3D currentPos = new Vec3D (this.x, this.y, this.z);
 
 		//bounds for dropping a particle
-		if (currentPos.x > XdepositPosition && currentPos.x < 145 && currentPos.y > 5 && currentPos.y < 245 && currentPos.z > 5){
+		if (currentPos.x > XdepositPosition && currentPos.x < 110 && currentPos.y > 5 && currentPos.y < 115 && currentPos.z > 1){
 
 		//find a close empty voxel
 		Vec3D target = voxelGrid.findValPosition(currentPos, dropRadius, 2f, this, 0f);
@@ -329,7 +341,7 @@ public void windAddition(float scaleFactor, float dropRate, int dropRadius, floa
 		
 		
 		//If the boxel below value is > 0 and the target is within bounds
-		if (voxelBelow > 0 && target.x > 10){
+		if (voxelBelow > 0 && target.x > 0){
 			
 			//check surrounding of voxel below
 			for (int i = -1; i<=1; i++){

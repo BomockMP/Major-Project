@@ -37,9 +37,9 @@ public class PurnululuMainApp extends PApplet {
 	PeasyCam cam;
 	
 	VoxelGrid voxels;
-	public static int dimX = 250;
-	public static int dimY = 250;
-	public static int dimZ = 18; //75
+	public static int dimX = 150;
+	public static int dimY = 150;
+	public static int dimZ = 30; //75
 	public static Vec3D scale = new Vec3D(1,1,1);
 	GradientVoxels gradientVoxels;
 
@@ -49,10 +49,10 @@ public class PurnululuMainApp extends PApplet {
 	public Canvas canvas;
 	
 	//spawn grid array
-	public int windAgentCountXPos = 200;
-	public int windAgentCountYPos = 200;
-	public int windAgentCountXNeg = 200;
-	public int windAgentCountYNeg = 200;
+	public int windAgentCountXPos = 320;
+	public int windAgentCountYPos = 320;
+	public int windAgentCountXNeg = 320;
+	public int windAgentCountYNeg = 320;
 	
 	//boundbox 
 //	public int bounds = dimX*(int)scale.y;
@@ -86,7 +86,7 @@ public class PurnululuMainApp extends PApplet {
 
 		
 		//load image		
-				terrain = loadImage("gradHM.png");
+				terrain = loadImage("PHM1.png");
 		
 		//voxels
 		voxels = new VoxelGrid(dimX, dimY, dimZ, scale);
@@ -94,10 +94,10 @@ public class PurnululuMainApp extends PApplet {
 		voxels.initGrid();
 		
 		//call create terrain function
-		//voxels.createTerrain(terrain);
-		
+	   // voxels.createTerrain(terrain);
+	    voxels.createTerrainAlt(terrain, 4f); //test
 		//gradient terrain from dark at bottom to light at top
-		gradientVoxels = new GradientVoxels(voxels, false);
+		gradientVoxels = new GradientVoxels(voxels, true);
 		//gradientVoxels.run();
 		gradientVoxels.splitGrid(voxels, 12);
 	
@@ -109,14 +109,14 @@ public class PurnululuMainApp extends PApplet {
 		
 		for (int i = 0; i < windAgentCountXPos; i++) {
 			float spawnptX = -35;
-			float spawnptY = random(10,240);
-			float spawnptZ = random(4,7);
+			float spawnptY = random(0,dimX);
+			float spawnptZ = random(5,9);
 			WindAgent a = new WindAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this, "posX");
 			environment.pop.add(a);
 	}
 		
 		for (int i = 0; i < windAgentCountYPos; i++) {
-			float spawnptX = random(10,240);
+			float spawnptX = random(0,dimX);
 			float spawnptY = -35;
 			float spawnptZ = random(4,7);
 			WindAgent a = new WindAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this, "posY");
@@ -125,16 +125,16 @@ public class PurnululuMainApp extends PApplet {
 
 		for (int i = 0; i < windAgentCountXNeg; i++) {
 			float spawnptX = dimX+35;
-			float spawnptY = random(10,240);
-			float spawnptZ = random(4,7);
+			float spawnptY = random(0,dimY);
+			float spawnptZ = random(10,15);
 			WindAgent a = new WindAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this, "negX");
 			environment.pop.add(a);
 	}
 		
 		for (int i = 0; i < windAgentCountYNeg; i++) {
-			float spawnptX = random(10,240);
+			float spawnptX = random(0,dimY);
 			float spawnptY = dimY+35;
-			float spawnptZ = random(4,7);
+			float spawnptZ = random(10,15);
 			WindAgent a = new WindAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this, "negY");
 			environment.pop.add(a);
 	}	
@@ -172,7 +172,7 @@ public class PurnululuMainApp extends PApplet {
 		
 		voxels.render(2, 1, 1, this);
 //		
-//		if (frameCount%700==0){
+		if (frameCount%700==0){
 //			//voxels.blurall();
 //			
 //			
@@ -186,8 +186,8 @@ public class PurnululuMainApp extends PApplet {
 //			
 //			
 //			
-//			System.out.println("c blurred!");
-//			}
+			System.out.println("c blurred!");
+			}
 	}
 	
 	

@@ -30,7 +30,7 @@ public class GreyScottMainApp extends PApplet {
 	public int stepsPerLevel = 1;
 	public int vWidth = 500;
 	public int vHeight = 500;
-	public int vDepth = 10;
+	public int vDepth = 6;
 	public boolean draw3d = false;
 	public int zCount = 0;
 	
@@ -44,7 +44,7 @@ public class GreyScottMainApp extends PApplet {
 
 		    size(500,500, OPENGL);
 		    
-		    terrain = loadImage("SiteHM7A.png");
+		    terrain = loadImage("GSHM_focus3.png");
 		    terrain.resize(vWidth, vHeight); //make sure image same size as grid and gs
 		    
 	    gs= new PatternedGrayScott(vWidth,vWidth,false,terrain, this);
@@ -54,7 +54,11 @@ public class GreyScottMainApp extends PApplet {
 	  // gs.setCoefficients(0.022f,0.079f,0.095f,0.03f); //makes dots
 	    //  gs.setCoefficients(0.023f,0.079f,0.095f,0.03f);
 	    //   gs.setCoefficients(0.023f,0.079f,0.099f,0.02f); good balance
-	    gs.setCoefficients(0.021f,0.074f,0.095f,0.022f);
+	    // gs.setCoefficients(0.021f,0.074f,0.095f,0.022f); required
+	   // gs.setCoefficients(0.021f,0.074f,0.097f,0.037f); //very dynamic
+	   // gs.setCoefficients(0.021f,0.074f,0.098f,0.059f); //very dynamic2
+	    gs.setCoefficients(0.022f,0.074f,0.098f,0.045f); //very dynamic2	    
+	    
 	    
 	    
 	    //volume
@@ -72,10 +76,10 @@ public class GreyScottMainApp extends PApplet {
 	  	//for (int i = 0; i < 10; i++){
 	  		pathPts.add(new Vec2D(344,483));
 	  		pathPts.add(new Vec2D(360,403));
-	  		pathPts.add(new Vec2D(326,340));
+	  		pathPts.add(new Vec2D(326,380));
 	  		pathPts.add(new Vec2D(325,404));
 	  		pathPts.add(new Vec2D(288,389));
-	  		pathPts.add(new Vec2D(312,316));
+	  		pathPts.add(new Vec2D(306,316));
 	  		pathPts.add(new Vec2D(261, 265));
 	  		pathPts.add(new Vec2D(217,326));
 	  		pathPts.add(new Vec2D(253,395));

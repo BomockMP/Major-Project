@@ -142,11 +142,11 @@ public class MainAppAlt extends PApplet {
 			VerletParticle3D p1 = springPhysics.particles.get(1);
 			float heading = (p.x-p1.x);
 			if (heading > 0){
-			WindAgent a = new WindAgent(startPosition, false, voxels, this, true);
-			environment.pop.add(a);
-			} else {
-				WindAgent a = new WindAgent(startPosition, false, voxels, this, false);
-				environment.pop.add(a);
+//			WindAgent a = new WindAgent(startPosition, false, voxels, this, true);
+//			environment.pop.add(a);
+//			} else {
+//				WindAgent a = new WindAgent(startPosition, false, voxels, this, false);
+//				environment.pop.add(a);
 			}
 			}
 			}

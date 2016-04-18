@@ -40,8 +40,8 @@ public class GSAgent extends Agent{
 		//ReadGS();
 			//avoidGSspots(5, 200, 255, 0.1f);
 			AvoidBrightness(5, 200, 255, 0.1f);
-			paintToPImage(1, 0, false);
-			follow(path, 5);
+			paintToPImage(1, 250, false);
+			follow(path, 2);
 		update();
 		}
 	
@@ -95,11 +95,11 @@ public class GSAgent extends Agent{
 				Vec2D desiredPos = closestPoint.add(lineDir);
 				Vec3D desiredPos3d = desiredPos.to3DXY();
 				
-				System.out.println(this);
-				System.out.println(desiredPos);
+				//System.out.println(this);
+				//System.out.println(desiredPos);
 				//scale force
 				
-				cohere(desiredPos3d, 0f, 500f, 10f, "exponential");
+				cohere(desiredPos3d, 0f, 500f, 20f, "exponential");
 				//Vec3D desiredPos3d = desiredPos.to3DXY();
 				//addForce(desiredPos3d);
 	
