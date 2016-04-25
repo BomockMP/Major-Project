@@ -30,7 +30,7 @@ public class GreyScottMainApp extends PApplet {
 	public int stepsPerLevel = 1;
 	public int vWidth = 500;
 	public int vHeight = 500;
-	public int vDepth = 6;
+	public int vDepth = 20;
 	public boolean draw3d = false;
 	public int zCount = 0;
 	
@@ -57,7 +57,7 @@ public class GreyScottMainApp extends PApplet {
 	    // gs.setCoefficients(0.021f,0.074f,0.095f,0.022f); required
 	   // gs.setCoefficients(0.021f,0.074f,0.097f,0.037f); //very dynamic
 	   // gs.setCoefficients(0.021f,0.074f,0.098f,0.059f); //very dynamic2
-	    gs.setCoefficients(0.022f,0.074f,0.098f,0.045f); //very dynamic2	    
+	    gs.setCoefficients(0.022f,0.079f,0.098f,0.045f); //very dynamic2	    
 	    
 	    
 	    
@@ -135,8 +135,8 @@ public class GreyScottMainApp extends PApplet {
 		
 	
 		for (int i = 0; i < 1; i++){
-			GSAgent a = new GSAgent(new Vec3D(344,483,0), false, terrain, gs, path);
-			environment.pop.add(a);
+		//	GSAgent a = new GSAgent(new Vec3D(344,483,0), false, terrain, gs, path);
+		//	environment.pop.add(a);
 		}
 	    
 	    
@@ -212,8 +212,8 @@ public	void draw() {
 		  
 		  
 		 //draw agent over the top
-		canvas.drawPts(environment.pop, 5);
-		canvas.drawSplinePoints(path);
+	//	canvas.drawPts(environment.pop, 5);
+	//	canvas.drawSplinePoints(path);
 		  
 		  
 		}

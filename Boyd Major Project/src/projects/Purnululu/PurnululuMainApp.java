@@ -85,7 +85,7 @@ public class PurnululuMainApp extends PApplet {
 		
 
 		
-		//load image		
+		//load image	 terrain = loadImage("planhm6.png");	
 				terrain = loadImage("PHM1.png");
 		
 		//voxels
@@ -110,7 +110,7 @@ public class PurnululuMainApp extends PApplet {
 		for (int i = 0; i < windAgentCountXPos; i++) {
 			float spawnptX = -35;
 			float spawnptY = random(0,dimX);
-			float spawnptZ = random(5,9);
+			float spawnptZ = random(1,3);
 			WindAgent a = new WindAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this, "posX");
 			environment.pop.add(a);
 	}
@@ -118,7 +118,7 @@ public class PurnululuMainApp extends PApplet {
 		for (int i = 0; i < windAgentCountYPos; i++) {
 			float spawnptX = random(0,dimX);
 			float spawnptY = -35;
-			float spawnptZ = random(4,7);
+			float spawnptZ = random(1,3);
 			WindAgent a = new WindAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this, "posY");
 			environment.pop.add(a);
 	}
@@ -126,7 +126,7 @@ public class PurnululuMainApp extends PApplet {
 		for (int i = 0; i < windAgentCountXNeg; i++) {
 			float spawnptX = dimX+35;
 			float spawnptY = random(0,dimY);
-			float spawnptZ = random(10,15);
+			float spawnptZ = random(1,3);
 			WindAgent a = new WindAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this, "negX");
 			environment.pop.add(a);
 	}
@@ -134,7 +134,7 @@ public class PurnululuMainApp extends PApplet {
 		for (int i = 0; i < windAgentCountYNeg; i++) {
 			float spawnptX = random(0,dimY);
 			float spawnptY = dimY+35;
-			float spawnptZ = random(10,15);
+			float spawnptZ = random(1,3);
 			WindAgent a = new WindAgent(new Vec3D(spawnptX, spawnptY, spawnptZ), false, voxels, this, "negY");
 			environment.pop.add(a);
 	}	
@@ -172,7 +172,7 @@ public class PurnululuMainApp extends PApplet {
 		
 		voxels.render(2, 1, 1, this);
 //		
-		if (frameCount%700==0){
+		if (frameCount%900==0){
 //			//voxels.blurall();
 //			
 //			
@@ -186,7 +186,7 @@ public class PurnululuMainApp extends PApplet {
 //			
 //			
 //			
-			System.out.println("c blurred!");
+			//System.out.println("c blurred!");
 			}
 	}
 	

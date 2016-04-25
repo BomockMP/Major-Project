@@ -44,7 +44,8 @@ public class WindAgent extends Agent {
 	
 	float randomX;
 	float randomZ;
-	public float windLateral = 0.4f;
+	public float windLateral = 0.3f;
+	public float windForward = 5.9f;
 	//CONSTRUCTOR
 	public WindAgent(Vec3D _o, boolean _f, VoxelGrid _voxelGrid, PApplet _parent, String _direction) {
 		super(_o, _f);
@@ -82,10 +83,10 @@ public class WindAgent extends Agent {
 			reset();
 		}
 
-		windErosion(0.05f);
-		windAddition(1f, 10f, 8, 5);
+		windErosion(0.1f);
+		windAddition(1f, 1f, 4, 2);
 		//FUNCTION FOR AVOIDING STRUCTURAL VOXELS (PAINTED) BETWEEN THE VALS AND WITHIN A SEARCH RADIUSS
-		avoidVoxels(voxelGrid, 3, 10f, 255f, 8f); //radius 4
+		avoidVoxels(voxelGrid, 4, 10f, 255f, 8f); //radius 4
 
 		//if particle moved past voxel grid start getting weighed down by sand
 		
@@ -170,7 +171,7 @@ if (this.x > 5 && this.z > 2 && this.x < 245 ){
 	
 	public Vec3D windXPos(){
 		Vec3D wind = new Vec3D(0,0,0);
-		 wind.x = (float) (0.5*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
+		 wind.x = (float) (windForward*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
 		 wind.y = (float) windLateral*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
 		 wind.z = (float) 0.005*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z));
 		return wind.getInverted();
@@ -179,14 +180,14 @@ if (this.x > 5 && this.z > 2 && this.x < 245 ){
 	public Vec3D windYPos(){
 		Vec3D wind = new Vec3D(0,0,0);
 		 wind.x = (float) (windLateral*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
-		 wind.y = (float)(0.5*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z)));   //increasing value before X is good
+		 wind.y = (float)(windForward*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z)));   //increasing value before X is good
 		 wind.z = (float) (0.005*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z)));
 		return wind.getInverted();
 	}
 	
 	public Vec3D windXNeg(){
 		Vec3D wind = new Vec3D(0,0,0);
-		 wind.x = (float) (0.5*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
+		 wind.x = (float) (windForward*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
 		 wind.y = (float) (windLateral*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z)));   //increasing value before X is good
 		 wind.z = (float) 0.05*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z));
 		return wind;
@@ -195,7 +196,7 @@ if (this.x > 5 && this.z > 2 && this.x < 245 ){
 	public Vec3D windYNeg(){
 		Vec3D wind = new Vec3D(0,0,0);
 		 wind.x = (float) (windLateral*parent.sin(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z))); //increasing value before X is good - 0.2
-		 wind.y = (float) 0.5*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
+		 wind.y = (float) windForward*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.1f*this.y,0.1f*this.z));   //increasing value before X is good
 		 wind.z = (float) 0.05*randomZ*parent.cos(TWO_PI*parent.noise(0.1f*this.x,0.01f*this.y,0.01f*this.z));
 		return wind;
 	}
@@ -265,7 +266,7 @@ if (this.x > 5 && this.z > 2 && this.x < 245 ){
 			awayFromVoxel.scaleSelf(force);
 			
 			if (awayFromVoxel.z < 0){
-			awayFromVoxel.scaleSelf(1, 1, -1);
+			//awayFromVoxel.scaleSelf(1, 1, -1); //make flow up only
 			}
 			//System.out.println(awayFromVoxel);
 			addForce(awayFromVoxel);

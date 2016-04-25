@@ -45,7 +45,7 @@ public class Agent extends Plane3D {
 
 	
 	//voxel tools
-	public int searchRadius = 20;
+	public int searchRadius = 30;
 
 
 	//-------------------------------------------------------------------------------------
