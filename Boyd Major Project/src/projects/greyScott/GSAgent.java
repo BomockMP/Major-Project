@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.vividsolutions.jts.geomgraph.Position;
+
 
 import processing.core.PImage;
 import toxi.geom.Line2D;
 import toxi.geom.Vec2D;
 import toxi.geom.Vec3D;
+import toxi.math.MathUtils;
 import voxelTools.Cell;
 import core.Agent;
 import core.Environment;
@@ -22,6 +23,7 @@ public class GSAgent extends Agent{
 	public PImage img;
 	public PatternedGrayScott gs;
 	public Path path;
+	public float randomForce;
 
 	
 	public GSAgent (Vec3D _o, boolean _f, PImage _img, PatternedGrayScott _gs, Path _path ){
@@ -31,7 +33,9 @@ public class GSAgent extends Agent{
 		gs = _gs;
 		path = _path;
 		resetTrail();
-		
+	   randomForce = MathUtils.random(2,15);
+	
+		System.out.println(randomForce);
 	}
 	
 	//@Override
@@ -39,9 +43,13 @@ public class GSAgent extends Agent{
 			
 		//ReadGS();
 			//avoidGSspots(5, 200, 255, 0.1f);
-			AvoidBrightness(5, 200, 255, 0.1f);
-			paintToPImage(1, 250, false);
-			follow(path, 2);
+			AvoidBrightness(5, 0, 10, randomForce); //avoid darkness in this case
+			//paintToPImage(1, 250, false);
+		//	follow(path, 2, 20); //tight
+			follow(path, 100, randomForce*2f); //faster = tighter
+			if(age%5==0){
+			addToTrail(this);
+			}
 		update();
 		}
 	
@@ -57,7 +65,7 @@ public class GSAgent extends Agent{
 		//attract to that position
 		
 		
-		public void follow(Path path, float pathRadius){
+		public void follow(Path path, float pathRadius, float attractionForce){
 			
 			
 			//get future location
@@ -99,7 +107,7 @@ public class GSAgent extends Agent{
 				//System.out.println(desiredPos);
 				//scale force
 				
-				cohere(desiredPos3d, 0f, 500f, 20f, "exponential");
+				cohere(desiredPos3d, 0f, pathRadius, attractionForce, "exponential");
 				//Vec3D desiredPos3d = desiredPos.to3DXY();
 				//addForce(desiredPos3d);
 	

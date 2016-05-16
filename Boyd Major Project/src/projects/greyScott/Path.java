@@ -15,9 +15,11 @@ public class Path {
 	public List<Vec2D> pointsOnCurve;
 	public LineStrip2D strip;
 	public List<Line2D> stripSegments;
+	public int segments;
 	 
-	Path(ArrayList<Vec2D> _controlPoints) {
+	Path(ArrayList<Vec2D> _controlPoints, int _segments) {
 		controlPoints = _controlPoints;
+		segments = _segments;
 	  }
 	
 	
@@ -39,7 +41,7 @@ public class Path {
 		//clear strip
 		strip = new LineStrip2D();
 		//add points to strip
-		strip = splinePath.toLineStrip2D(5);
+		strip = splinePath.toLineStrip2D(segments); //5 points per segment. lets reduce this.
 		//get line segments
 		stripSegments = strip.getSegments();
 	}

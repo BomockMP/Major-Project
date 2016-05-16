@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javax.naming.ldap.StartTlsResponse;
 
 import com.jogamp.newt.event.MouseAdapter;
-import com.vividsolutions.jts.math.MathUtil;
+
 
 import controlP5.CheckBox;
 import processing.core.PApplet;

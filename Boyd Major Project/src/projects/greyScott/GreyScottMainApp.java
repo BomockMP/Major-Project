@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import core.Canvas;
 import core.Environment;
+import core.IO;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
@@ -18,6 +19,8 @@ import voxelTools.VoxelGrid;
 
 public class GreyScottMainApp extends PApplet {
 
+	//920 size for details
+	//400 size for mound size as larger
 
 	public PatternedGrayScott gs;
 	
@@ -28,9 +31,9 @@ public class GreyScottMainApp extends PApplet {
 	public VoxelGrid voxels;
 	public int timeDepth = 100;
 	public int stepsPerLevel = 1;
-	public int vWidth = 500;
-	public int vHeight = 500;
-	public int vDepth = 20;
+	public int vWidth = 920; //920 max
+	public int vHeight = 920;//920 max
+	public int vDepth = 7; //8 makes them nippley
 	public boolean draw3d = false;
 	public int zCount = 0;
 	
@@ -38,26 +41,44 @@ public class GreyScottMainApp extends PApplet {
 	
 	public Canvas canvas;
 	
+	public  ArrayList<Vec2D> pathPts;
 	public Path path;
+	
+	public ArrayList<Vec3D> spawnPts; //array list of vectors for agent spawn locations
+	public int agentCount;
+	
 	
 	public void setup() {
 
-		    size(500,500, OPENGL);
+		    size(920,920, OPENGL); //920 max
 		    
-		    terrain = loadImage("GSHM_focus3.png");
+		    terrain = loadImage("W10HMA.png");
 		    terrain.resize(vWidth, vHeight); //make sure image same size as grid and gs
 		    
 	    gs= new PatternedGrayScott(vWidth,vWidth,false,terrain, this);
 	    
 	    //public void setCoefficients(float f, float k, float dU, float dV) 
 	  //  gs.setCoefficients(0.023f,0.074f,0.095f,0.03f);
-	  // gs.setCoefficients(0.022f,0.079f,0.095f,0.03f); //makes dots
+	 //  gs.setCoefficients(0.022f,0.079f,0.095f,0.03f); //makes dots still does
 	    //  gs.setCoefficients(0.023f,0.079f,0.095f,0.03f);
-	    //   gs.setCoefficients(0.023f,0.079f,0.099f,0.02f); good balance
-	    // gs.setCoefficients(0.021f,0.074f,0.095f,0.022f); required
+	   //    gs.setCoefficients(0.023f,0.079f,0.099f,0.02f); //good balance no longer
+	    // gs.setCoefficients(0.021f,0.074f,0.095f,0.022f); //required
+	   //  gs.setCoefficients(0.021f,0.074f,0.096f,0.028f); //required!
+	    
+	 // gs.setCoefficients(0.016f,0.074f,0.096f,0.028f); //test1
+	   gs.setCoefficients(0.0155f,0.074f,0.096f,0.028f); //test2 good for road edges
+	    
+	    
+	// gs.setCoefficients(0.0155f,0.076f,0.090f,0.02f); //test3 - slow but good bunts THIS ONE IS GOOD for overall landscape details
+	    
+	    
+	 //   gs.setCoefficients(0.0215f,0.065f,0.095f,0.02f); //test4 - honeycomb
+	    
+	//    gs.setCoefficients(0.0215f,0.065f,0.095f,0.02f); //test5
+	    
 	   // gs.setCoefficients(0.021f,0.074f,0.097f,0.037f); //very dynamic
 	   // gs.setCoefficients(0.021f,0.074f,0.098f,0.059f); //very dynamic2
-	    gs.setCoefficients(0.022f,0.079f,0.098f,0.045f); //very dynamic2	    
+	   // gs.setCoefficients(0.022f,0.079f,0.098f,0.045f); //very dynamic2	    
 	    
 	    
 	    
@@ -70,34 +91,44 @@ public class GreyScottMainApp extends PApplet {
 	  //canvas
 	  	canvas = new Canvas(this.g);
 	  	
+	  //spawn pt array for agents
+//	  	spawnPts = new ArrayList<Vec3D>();
+//		ArrayList<Vec3D> points = IO.importPoints(this, "C:\\Users\\Boyd\\git\\Major  Project\\Boyd Major Project\\bin\\Bpts.txt");
+//		System.out.println("file Read");
+//		System.out.println(points.size());
 	  	
+	  	
+		 //Path Pts to create path
+	  	pathPts = new ArrayList<Vec2D>();
+	  	
+	  	//import the points for path
+//		ArrayList<Vec3D> points = IO.importPoints(this, "C:\\Users\\Boyd\\git\\Major-Project\\Boyd Major Project\\bin\\PathPts.txt");
+//		System.out.println("file Read");
+//		System.out.println(points.size());
+		
+		
+		
+	  	//import the points for AGENT SPAWN
+//		ArrayList<Vec3D> spawn = IO.importPoints(this, "C:\\Users\\Boyd\\git\\Major-Project\\Boyd Major Project\\bin\\SpawnPts.txt");
+//		System.out.println("file Read");
+//		System.out.println(spawn.size());
+		
+		//C:\Users\Boyd\git\Major-Project\Boyd Major Project\bin
+		
 	  	//AGENT PATH TESTING
-	  	ArrayList<Vec2D>pathPts = new ArrayList<Vec2D>();
-	  	//for (int i = 0; i < 10; i++){
-	  		pathPts.add(new Vec2D(344,483));
-	  		pathPts.add(new Vec2D(360,403));
-	  		pathPts.add(new Vec2D(326,380));
-	  		pathPts.add(new Vec2D(325,404));
-	  		pathPts.add(new Vec2D(288,389));
-	  		pathPts.add(new Vec2D(306,316));
-	  		pathPts.add(new Vec2D(261, 265));
-	  		pathPts.add(new Vec2D(217,326));
-	  		pathPts.add(new Vec2D(253,395));
-	  		pathPts.add(new Vec2D(197,445));
-	  		pathPts.add(new Vec2D(152,408));
-	  		pathPts.add(new Vec2D(211,358));
-	  		pathPts.add(new Vec2D(149,341));
-	  		pathPts.add(new Vec2D(119,415));
-	  		pathPts.add(new Vec2D(51,409));
-	  		pathPts.add(new Vec2D(59,333));
-	  		pathPts.add(new Vec2D(136,310));
-	  		pathPts.add(new Vec2D(146,235));
-	  		pathPts.add(new Vec2D(219,243));
-	  		pathPts.add(new Vec2D(182,305));
+	  	
+	  	//for each vec3d point in point list, turn to ve2d and add to path
+//	  	for (int i = 0; i < points.size(); i++){
+//	  	
+//	  		Vec3D v = points.get(i);
+//	  		Vec2D v2d = v.to2DXY();
+//	  		pathPts.add(v2d);
+//
+//	  	}
 	  		
-	  	//}
-	  	path = new Path(pathPts);
-	  	path.initiatePath();
+
+//	  	path = new Path(pathPts, 2);
+//	  	path.initiatePath();
 	  	
 	  
 	  		
@@ -134,10 +165,10 @@ public class GreyScottMainApp extends PApplet {
 		
 		
 	
-		for (int i = 0; i < 1; i++){
-		//	GSAgent a = new GSAgent(new Vec3D(344,483,0), false, terrain, gs, path);
-		//	environment.pop.add(a);
-		}
+//		for (int i = 0; i < spawn.size(); i++){
+//			GSAgent a = new GSAgent(spawn.get(i), false, terrain, gs, path);
+//			environment.pop.add(a);
+//		}
 	    
 	    
 	    
@@ -212,9 +243,9 @@ public	void draw() {
 		  
 		  
 		 //draw agent over the top
-	//	canvas.drawPts(environment.pop, 5);
-	//	canvas.drawSplinePoints(path);
-		  
+//		canvas.drawPts(environment.pop, 5);
+//		canvas.drawSplinePoints(path);
+//		  
 		  
 		}
 
@@ -254,9 +285,24 @@ public void keyPressed() {
 	
 	
 	if (key == 'd'){
-		
 		draw3d = true;
 	}
+	
+	
+//	if (key == 'i'){
+//		//import
+//		ArrayList<Vec3D> points = IO.importPoints(this, "C:\\Users\\Boyd\\git\\Major  Project\\Boyd Major Project\\bin\\Bpts.txt");
+//		System.out.println("file Read");
+//		System.out.println(points.size());
+//	}
+	
+	
+	if (key == 't'){
+		
+		
+		IO.saveTrails(environment.pop, "GStrails_"+frameCount+".txt");
+	}
+	
 	
 }
 

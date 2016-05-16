@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import javax.media.nativewindow.OffscreenLayerOption;
 
-import ProGAL.proteins.PDBFile.ParentRecord;
+
 import processing.core.PApplet;
 import processing.core.PImage;
 import toxi.math.MathUtils;

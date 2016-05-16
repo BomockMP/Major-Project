@@ -13,9 +13,26 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/WBlut"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Kinect2"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenNI2"/>
-	<classpathentry kind="lib" path="C:/Libraries/bRigid/library/bRigid.jar"/>
-	<classpathentry kind="lib" path="C:/Libraries/bRigid/library/jbullet.jar"/>
-	<classpathentry kind="lib" path="C:/Libraries/bRigid/library/vecmath.jar"/>
-	<classpathentry kind="lib" path="C:/Libraries/OBJExport/library/OBJExport.jar"/>
+	<classpathentry kind="lib" path="libraries/controlP5.jar"/>
+	<classpathentry kind="lib" path="libraries/KinectPV2.jar"/>
+	<classpathentry kind="lib" path="libraries/peasycam.jar"/>
+	<classpathentry kind="lib" path="libraries/hemesh/hemesh.jar"/>
+	<classpathentry kind="lib" path="libraries/hemesh/javolution-5.5.1.jar"/>
+	<classpathentry kind="lib" path="libraries/processing/core.jar"/>
+	<classpathentry kind="lib" path="libraries/processing/gluegen-rt-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="libraries/processing/gluegen-rt-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="libraries/processing/gluegen-rt-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="libraries/processing/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="libraries/processing/jogl-all-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="libraries/processing/jogl-all-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="libraries/processing/jogl-all-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="libraries/processing/jogl-all.jar"/>
+	<classpathentry kind="lib" path="libraries/toxi/colorutils.jar"/>
+	<classpathentry kind="lib" path="libraries/toxi/datautils.jar"/>
+	<classpathentry kind="lib" path="libraries/toxi/simutils.jar"/>
+	<classpathentry kind="lib" path="libraries/toxi/toxiclibs_p5.jar"/>
+	<classpathentry kind="lib" path="libraries/toxi/toxiclibscore.jar"/>
+	<classpathentry kind="lib" path="libraries/toxi/verletphysics.jar"/>
+	<classpathentry kind="lib" path="libraries/toxi/volumeutils.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
