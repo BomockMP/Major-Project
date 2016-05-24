@@ -31,9 +31,9 @@ public class GreyScottMainApp extends PApplet {
 	public VoxelGrid voxels;
 	public int timeDepth = 100;
 	public int stepsPerLevel = 1;
-	public int vWidth = 920; //920 max
-	public int vHeight = 920;//920 max
-	public int vDepth = 7; //8 makes them nippley
+	public int vWidth = 400; //920 max //920 for features, 950 for waterways, 400 for humps
+	public int vHeight =400;//920 max
+	public int vDepth = 7; //8 makes them nippley //7 is ideal
 	public boolean draw3d = false;
 	public int zCount = 0;
 	
@@ -50,12 +50,14 @@ public class GreyScottMainApp extends PApplet {
 	
 	public void setup() {
 
-		    size(920,920, OPENGL); //920 max
+		    size(400,400, OPENGL); //920 max
 		    
-		    terrain = loadImage("W10HMA.png");
+		    terrain = loadImage("sitehm8_mirror.png"); // terrain = loadImage("W10HMA.png");
 		    terrain.resize(vWidth, vHeight); //make sure image same size as grid and gs
 		    
 	    gs= new PatternedGrayScott(vWidth,vWidth,false,terrain, this);
+	    
+	    //SITE MESHES
 	    
 	    //public void setCoefficients(float f, float k, float dU, float dV) 
 	  //  gs.setCoefficients(0.023f,0.074f,0.095f,0.03f);
@@ -66,22 +68,38 @@ public class GreyScottMainApp extends PApplet {
 	   //  gs.setCoefficients(0.021f,0.074f,0.096f,0.028f); //required!
 	    
 	 // gs.setCoefficients(0.016f,0.074f,0.096f,0.028f); //test1
-	   gs.setCoefficients(0.0155f,0.074f,0.096f,0.028f); //test2 good for road edges
+	    
+	    //KEY ONES
+	//   gs.setCoefficients(0.0155f,0.074f,0.096f,0.028f); //test2 good for road edges
+	//gs.setCoefficients(0.0155f,0.076f,0.090f,0.02f); //test3 - slow but good bunts THIS ONE IS GOOD for overall landscape details
+	   gs.setCoefficients(0.022f,0.079f,0.095f,0.03f); //mounds    
+
+	    //---------------
 	    
 	    
-	// gs.setCoefficients(0.0155f,0.076f,0.090f,0.02f); //test3 - slow but good bunts THIS ONE IS GOOD for overall landscape details
+		 //   gs.setCoefficients(0.0215f,0.065f,0.095f,0.02f); //test4 - honeycomb
+		    
+		//    gs.setCoefficients(0.0215f,0.065f,0.095f,0.02f); //test5
+		    
+		   // gs.setCoefficients(0.021f,0.074f,0.097f,0.037f); //very dynamic
+		   // gs.setCoefficients(0.021f,0.074f,0.098f,0.059f); //very dynamic2
+		   // gs.setCoefficients(0.022f,0.079f,0.098f,0.045f); //very dynamic2	    
+		    
+	    
+	    //-----------------------------
+	    //SPIRITUAL SITE 
+	    //-----------------------------
+	  // gs.setCoefficients(0.0155f,0.074f,0.096f,0.028f); //test2 good for road edges
+	 //  gs.setCoefficients(0.0155f,0.076f,0.090f,0.02f);
+	//   gs.setCoefficients(0.0215f,0.065f,0.095f,0.02f); //test4 - honeycomb
+	  //  gs.setCoefficients(0.021f,0.074f,0.098f,0.059f);
+	 //   gs.setCoefficients(0.0215f,0.065f,0.095f,0.02f); //test5
+	//    gs.setCoefficients(0.0155f,0.074f,0.096f,0.028f); //test2 good for road edges
 	    
 	    
-	 //   gs.setCoefficients(0.0215f,0.065f,0.095f,0.02f); //test4 - honeycomb
-	    
-	//    gs.setCoefficients(0.0215f,0.065f,0.095f,0.02f); //test5
-	    
-	   // gs.setCoefficients(0.021f,0.074f,0.097f,0.037f); //very dynamic
-	   // gs.setCoefficients(0.021f,0.074f,0.098f,0.059f); //very dynamic2
-	   // gs.setCoefficients(0.022f,0.079f,0.098f,0.045f); //very dynamic2	    
 	    
 	    
-	    
+	    //-----------------------------
 	    //volume
 	    voxels = new VoxelGrid(vWidth,vHeight,vDepth, new Vec3D(1,1,1));
 	    voxels.initGrid();
